@@ -1,33 +1,33 @@
 ---
 title: PHP
-description: Learn how to connect to Redis databases in Sailos Devbox using PHP
+description: 在 Sealos Devbox 中使用 PHP 连接 Redis 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a Redis database using PHP within your Sailos Devbox project.
+本教程将指导您如何在 Sealos Devbox 项目中使用 PHP 连接和操作 Redis 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with PHP environment
-- [A Redis database created using the Database app in Sailos](./)
+- [已创建并配置好 PHP 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已在 Sealos 数据库应用中创建 Redis 实例](./)
 
-## Install Required Extensions
+## 安装 Redis 扩展
 
-In your Cursor terminal, ensure that the Redis extension for PHP is installed:
+首先在 Cursor 终端中安装 PHP 的 Redis 扩展：
 
 ```bash
 sudo apt-get update
 sudo apt-get install php-redis -y
 ```
 
-## Connection Setup
+## 配置连接
 
 <div className='steps [&_h4]:step'>
 
-#### Create a Configuration File
+#### 创建配置文件
 
-First, let's create a configuration file to store our Redis connection parameters. Create a file named `config.php` in your project directory with the following content:
+首先创建一个用于存储 Redis 连接参数的配置文件。在项目根目录下新建 `config.php` 文件：
 
-```php
+```php title="config.php"
 <?php
 return [
     'host' => 'your_redis_host',
@@ -36,13 +36,13 @@ return [
 ];
 ```
 
-Replace the placeholders with your actual Redis credentials from the Database app in Sailos.
+请将上述配置中的占位符替换为您从 Sealos 数据库应用获取的实际 Redis 连接信息。
 
-#### Create a Redis Connection Function
+#### 实现连接函数
 
-Next, let's create a PHP file that will handle the Redis connection. Create a file named `redis_connect.php` with the following content:
+接下来创建一个用于处理 Redis 连接的工具函数。在项目目录下新建 `redis_connect.php` 文件：
 
-```php
+```php title="redis_connect.php"
 <?php
 function getRedisConnection() {
     $config = include 'config.php';
@@ -63,20 +63,20 @@ function getRedisConnection() {
 }
 ```
 
-This function reads the configuration from `config.php` and establishes a connection to the Redis database.
+此函数会读取配置文件并建立与 Redis 数据库的连接。如果连接失败，将抛出异常并显示错误信息。
 
-#### Create a Test Script
+#### 编写测试脚本
 
-Now, let's create a test script to verify our connection and perform some basic Redis operations. Create a file named `test_redis.php` with the following content:
+为了验证连接并测试基本的 Redis 操作，创建一个测试脚本 `test_redis.php`：
 
-```php
+```php title="test_redis.php"
 <?php
 require_once 'redis_connect.php';
 
 $redis = getRedisConnection();
 
 // Set a key
-$redis->set('mykey', 'Hello from Sailos Devbox!');
+$redis->set('mykey', 'Hello from Sealos Devbox!');
 echo "Key set successfully.\n";
 
 // Get a key
@@ -97,35 +97,45 @@ $redis->close();
 echo "Redis connection closed.\n";
 ```
 
-This script demonstrates setting and getting a key, as well as working with Redis hashes.
+这个测试脚本展示了 Redis 的基本操作，包括键值对的设置与获取，以及哈希数据结构的操作示例。
 
 </div>
 
-## Usage
+## 运行测试
 
-To run the test script, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令来运行测试脚本：
 
 ```bash
 php test_redis.php
 ```
 
-This will execute the script, demonstrating the connection to Redis and basic operations.
+脚本将执行一系列 Redis 操作并输出结果，您可以通过这些输出验证连接和操作是否成功。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables or a separate configuration file for Redis credentials.
-2. Handle potential errors using try-catch blocks.
-3. Close the Redis connection after operations are complete.
-4. Use Redis transactions for operations that need to be atomic.
-5. Consider using a connection pool for better performance in production environments.
+1. 安全性考虑
+   - 使用环境变量或独立的配置文件存储连接凭据
+   - 避免在代码中硬编码敏感信息
+   
+2. 性能优化
+   - 合理使用连接池提升性能
+   - 及时关闭不再使用的连接
+   
+3. 代码质量
+   - 始终使用 try-catch 进行异常处理
+   - 对需要原子性的操作使用 Redis 事务
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请按以下步骤检查：
 
-1. Verify your Redis credentials in the `config.php` file.
-2. Ensure your Redis database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the `php-redis` extension is correctly installed.
+1. 验证配置信息
+   - 检查 `config.php` 中的连接参数是否正确
+   - 确认 Redis 实例状态是否正常
 
-For more detailed information on using Redis with PHP, refer to the [official PHP Redis documentation](https://github.com/phpredis/phpredis).
+2. 环境检查
+   - 确认 `php-redis` 扩展已正确安装
+   - 检查 Devbox 环境的网络连接状态
+
+
+如需了解更多 PHP Redis 操作的详细信息，请参考 [PHP Redis 官方文档](https://github.com/phpredis/phpredis)。

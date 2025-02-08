@@ -1,34 +1,35 @@
 ---
 title: Node.js
-description: Learn how to connect to Redis databases in Sailos Devbox using Node.js
+description: 在 Sealos Devbox 中使用 Node.js 连接 Redis 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a Redis database using Node.js within your Sailos Devbox project.
+本文将指导您如何在 Sealos Devbox 项目中使用 Node.js 连接和操作 Redis 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Node.js environment
-- [A Redis database created using the Database app in Sailos](./)
+- [已创建并配置好 Node.js 运行环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已在 Sealos 桌面数据库应用中创建的 Redis 数据库实例](./)
 
-## Install Required Packages
+## 安装依赖包
 
-In your Cursor terminal, install the necessary packages:
+在 Cursor 终端中执行以下命令安装必要的依赖包：
 
 ```bash
 npm install redis dotenv
 ```
 
-This command installs:
-- `redis`: The Redis client for Node.js
-- `dotenv`: A zero-dependency module that loads environment variables from a `.env` file
+该命令将安装以下依赖：
 
-## Connection Setup
+- `redis`：Node.js 的 Redis 客户端库
+- `dotenv`：用于从 `.env` 文件中加载环境变量的零依赖模块
+
+## 配置连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录创建 `.env` 文件，添加以下数据库连接配置：
 
 ```ini title=".env"
 REDIS_HOST=your_redis_host
@@ -36,13 +37,13 @@ REDIS_PORT=6379
 REDIS_PASSWORD=your_redis_password
 ```
 
-Replace the placeholders with your actual Redis credentials from the Database app in Sailos.
+请将上述配置项替换为您从 Sealos 数据库应用中获取的实际 Redis 连接信息。
 
-#### Create a connection file
+#### 创建数据库连接文件
 
-Next, create a file named `redisClient.js` with the following content:
+接下来，创建 `redisClient.js` 文件并添加以下代码：
 
-```javascript
+```javascript title="redisClient.js"
 const redis = require('redis');
 require('dotenv').config();
 
@@ -60,13 +61,13 @@ async function connectRedis() {
 module.exports = { client, connectRedis };
 ```
 
-This file creates a Redis client and exports it along with a connection function.
+此文件创建了 Redis 客户端实例并导出客户端对象及其连接方法。
 
-#### Create a test script
+#### 编写测试脚本
 
-Now, let's create a file named `test-redis.js` to demonstrate basic Redis operations:
+创建 `test-redis.js` 文件来测试基本的 Redis 操作：
 
-```javascript
+```javascript title="test-redis.js"
 const { client, connectRedis } = require('./redisClient');
 
 async function testRedisOperations() {
@@ -75,7 +76,7 @@ async function testRedisOperations() {
     console.log('Connected to Redis');
 
     // Set a key
-    await client.set('mykey', 'Hello from Sailos Devbox!');
+    await client.set('mykey', 'Hello from Sealos Devbox!');
     console.log('Key set successfully');
 
     // Get a key
@@ -102,35 +103,35 @@ async function testRedisOperations() {
 testRedisOperations();
 ```
 
-This script demonstrates setting and getting a key, as well as working with Redis hashes.
+该测试脚本演示了如何连接 Redis 数据库并执行基本的键值对和哈希表操作。
 
 </div>
 
-## Usage
+## 运行测试
 
-To run the test script, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令运行测试脚本：
 
 ```bash
 node test-redis.js
 ```
 
-This will execute the `testRedisOperations` function, demonstrating the connection to Redis and basic operations.
+执行后，脚本将连接 Redis 数据库并依次执行各项测试操作。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for Redis credentials.
-2. Handle connection errors and implement reconnection logic if needed.
-3. Use async/await for cleaner asynchronous code.
-4. Close the Redis connection when it's no longer needed.
-5. Consider using a connection pool for better performance in production environments.
+1. 始终使用环境变量管理数据库连接信息
+2. 实现适当的错误处理和重连机制
+3. 使用 async/await 编写清晰的异步代码
+4. 及时关闭不再使用的数据库连接
+5. 在生产环境中考虑使用连接池以提升性能
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请按以下步骤排查：
 
-1. Verify your Redis credentials in the `.env` file.
-2. Ensure your Redis database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the `redis` package is correctly installed.
+1. 检查 `.env` 文件中的 Redis 连接信息是否正确
+2. 确认 Redis 数据库实例是否正常运行且可访问
+3. 检查 Devbox 运行环境的网络配置是否有限制
+4. 验证 `redis` 依赖包是否正确安装
 
-For more detailed information on using Redis with Node.js, refer to the [Node Redis documentation](https://github.com/redis/node-redis).
+更多关于 Node.js Redis 客户端的详细信息，请参考 [Node Redis 官方文档](https://github.com/redis/node-redis)。

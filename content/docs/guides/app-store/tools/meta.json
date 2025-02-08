@@ -1,0 +1,4 @@
+{
+    "title": "工具类",
+    "pages": ["[安装网盘聚合工具 Alist](https://template.hzh.sealos.run/deploy?templateName=alist)", "[安装开源商城 CRMEB](https://template.hzh.sealos.run/deploy?templateName=crmeb)", "[安装 Headscale](https://template.hzh.sealos.run/deploy?templateName=headscale)", "[安装 LaTeX 编辑器 Overleaf](https://template.hzh.sealos.run/deploy?templateName=overleaf)", "[安装 Anki 服务器](https://template.hzh.sealos.run/deploy?templateName=anki-server)", "[安装双链笔记 Blossom](https://template.hzh.sealos.run/deploy?templateName=blossom)", "[安装 PDF 工具箱 Stirling-PDF](https://template.hzh.sealos.run/deploy?templateName=s-pdf)"]
+}

@@ -1,18 +1,20 @@
 ---
 title: Rust
-description: Learn how to connect to MySQL databases in Sailos Devbox using Rust
+description: 在 Sealos Devbox 中使用 Rust 连接 MySQL 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a MySQL database using Rust within your Sailos Devbox project.
+本教程将详细介绍如何在 Sealos Devbox 项目中使用 Rust 语言连接和操作 MySQL 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Rust environment
-- [A MySQL database created using the Database app in Sailos](./)
+在开始之前，请确保您已经：
 
-## Install Required Dependencies
+- [创建并配置好 Rust 开发环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [在 Sealos 数据库应用中创建了 MySQL 数据库实例](./)
 
-In your Cursor terminal, add the necessary dependencies to your `Cargo.toml` file:
+## 安装依赖
+
+将以下必要的依赖项添加到 `Cargo.toml` 文件：
 
 ```toml
 [dependencies]
@@ -21,28 +23,28 @@ sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "mysql"] }
 dotenv = "0.15"
 ```
 
-These dependencies include:
-- `tokio`: An asynchronous runtime for Rust
-- `sqlx`: A database toolkit for Rust with async support
-- `dotenv`: A library for loading environment variables from a file
+这些依赖包的作用：
+- `tokio`：高性能的异步运行时框架，提供异步编程支持
+- `sqlx`：类型安全的异步 SQL 工具包，支持多种数据库
+- `dotenv`：用于从配置文件中读取环境变量的工具库
 
-## Connection Setup
+## 配置数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 设置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录下创建 `.env` 文件，配置数据库连接信息：
 
 ```ini title=".env"
 DATABASE_URL=mysql://your_username:your_password@your_database_host:3306/your_database_name
 ```
 
-Replace the placeholders with your actual MySQL credentials from the Database app in Sailos.
+请将上述配置项替换为您在 Sealos 数据库应用中获取的实际 MySQL 连接信息。
 
-#### Create the main.rs file
+#### 创建主程序
 
-Create a new file named `src/main.rs` with the following content:
+在 `src/main.rs` 路径下创建文件，实现数据库连接和基本操作：
 
 ```rust title="src/main.rs"
 use sqlx::mysql::MySqlPoolOptions;
@@ -115,49 +117,72 @@ async fn main() -> Result<(), sqlx::Error> {
 }
 ```
 
-Let's break down the main components of this code:
+代码主要包含以下几个部分：
 
-1. **Imports**: We import necessary modules from `sqlx`, `dotenv`, and `std::env`.
+1. **环境配置**：使用 `dotenv` 加载环境变量，获取数据库连接信息。
 
-2. **Main function**: The `main` function is marked with `#[tokio::main]` to use Tokio's async runtime.
+2. **连接池创建**：通过 `MySqlPoolOptions` 创建数据库连接池，提高性能和资源利用率。
 
-3. **Environment setup**: We load environment variables from the `.env` file and retrieve the database URL.
+3. **数据表操作**：
+   - 创建 `employees` 表 (如果不存在)
+   - 插入示例员工数据
+   - 查询并显示所有员工信息
 
-4. **Connection pool**: We create a connection pool using `MySqlPoolOptions`.
-
-5. **Table creation**: We create the `employees` table if it doesn't exist.
-
-6. **Data insertion**: We insert a sample employee into the database.
-
-7. **Data querying**: We query and display all employees in the database.
+4. **错误处理**：使用 Rust 的 `Result` 类型进行错误处理，确保程序的健壮性。
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令来运行程序：
 
 ```bash
 cargo run
 ```
 
-This will compile and execute the `main` function, demonstrating the connection to the database, table creation, data insertion, and querying.
+程序将依次执行数据库连接、创建表、插入数据和查询数据等操作，并在控制台输出执行结果。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for database credentials.
-2. Use connection pooling for better performance and resource management.
-3. Use prepared statements (as demonstrated with `sqlx::query`) to prevent SQL injection.
-4. Handle errors appropriately using Rust's `Result` type.
-5. Use async/await for efficient database operations.
+1. **安全性考虑**
+   - 使用环境变量管理敏感信息
+   - 采用参数化查询防止 SQL 注入
+   - 妥善处理错误信息，避免泄露敏感数据
 
-## Troubleshooting
+2. **性能优化**
+   - 合理配置连接池参数
+   - 使用批量操作处理大量数据
+   - 避免频繁创建和销毁连接
 
-If you encounter connection issues:
+3. **代码质量**
+   - 使用 Rust 的类型系统确保类型安全
+   - 实现适当的错误处理和日志记录
+   - 保持代码结构清晰，便于维护
 
-1. Verify your database credentials in the `.env` file.
-2. Ensure your MySQL database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that all required dependencies are correctly specified in your `Cargo.toml` file.
+4. **资源管理**
+   - 及时释放数据库连接
+   - 使用连接池管理资源
+   - 合理设置超时和重试策略
 
-For more detailed information on using MySQL with Rust, refer to the [sqlx documentation](https://github.com/launchbadge/sqlx).
+## 常见问题排查
+
+如果遇到问题，请按以下步骤进行排查：
+
+1. **连接问题**
+   - 检查 `.env` 文件中的数据库连接信息是否正确
+   - 确认 MySQL 数据库是否正常运行且可访问
+   - 验证网络连接是否正常
+
+2. **编译错误**
+   - 确保所有依赖项已正确配置
+   - 检查 Rust 工具链是否完整
+   - 核实代码语法是否正确
+
+3. **运行时错误**
+   - 查看详细的错误信息和堆栈跟踪
+   - 检查数据库用户权限设置
+   - 确认 SQL 语句语法是否正确
+
+如需了解更多关于 Rust 操作 MySQL 的详细信息，请参考：
+- [sqlx 官方文档](https://github.com/launchbadge/sqlx)
+- [Rust MySQL 驱动文档](https://docs.rs/mysql/latest/mysql/)

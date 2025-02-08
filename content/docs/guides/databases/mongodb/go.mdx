@@ -1,46 +1,46 @@
 ---
 title: Go
-description: Learn how to connect to MongoDB databases in Sailos Devbox using Go
+description: 在 Sealos Devbox 中使用 Go 语言连接并操作 MongoDB 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a MongoDB database using Go within your Sailos Devbox project.
+本教程将介绍如何在 Sealos Devbox 项目中使用 Go 语言连接和操作 MongoDB 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Go environment
-- [A MongoDB database created using the Database app in Sailos](./)
+- [已创建并配置好 Go 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已在 Sealos 数据库应用中创建的 MongoDB 实例](./)
 
-## Install Required Packages
+## 安装依赖包
 
-In your Cursor terminal, install the necessary packages:
+在 Cursor 终端中执行以下命令安装所需的依赖包：
 
 ```bash
 go get go.mongodb.org/mongo-driver/mongo
 go get github.com/joho/godotenv
 ```
 
-These commands install:
-- `go.mongodb.org/mongo-driver/mongo`: The official MongoDB driver for Go
-- `github.com/joho/godotenv`: A Go port of the Ruby dotenv library
+这两个包的作用分别是：
+- `go.mongodb.org/mongo-driver/mongo`：MongoDB 官方 Go 驱动程序
+- `github.com/joho/godotenv`：用于加载环境变量的工具包
 
-## Connection Setup
+## 配置数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 设置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录下创建 `.env` 文件，添加以下数据库连接配置：
 
 ```ini title=".env"
 MONGO_URI=mongodb://your_username:your_password@your_database_host:27017
 DB_NAME=your_database_name
 ```
 
-Replace the placeholders with your actual MongoDB credentials from the Database app in Sailos. Note that we're not including the database name in the URI, as we'll create it programmatically if it doesn't exist.
+请将占位符替换为 Sealos 数据库应用中 MongoDB 实例的实际连接信息。
 
-#### Create the main.go file
+#### 编写主程序代码
 
-Create a new file named `main.go` with the following content:
+创建 `main.go` 文件，添加如下代码：
 
 ```go title="main.go"
 package main
@@ -143,35 +143,35 @@ func createDatabaseIfNotExists(client *mongo.Client, ctx context.Context, dbName
 }
 ```
 
-This code demonstrates how to connect to MongoDB, create a database if it doesn't exist, insert a document, and find a document. It uses environment variables for the MongoDB URI and database name.
+上述代码演示了 MongoDB 的基本操作，包括：连接数据库、自动创建数据库 (如果不存在)、插入文档和查询文档。所有的数据库配置信息都通过环境变量进行管理。
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令来运行程序：
 
 ```bash
 go run main.go
 ```
 
-This will execute the `main` function, demonstrating the connection to MongoDB, database creation (if necessary), and performing basic operations.
+程序将执行一系列操作，包括连接数据库、创建数据库 (如果需要) 以及进行基本的数据操作。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for database credentials and configuration.
-2. Always handle potential errors using proper error checking.
-3. Use contexts for operations that might need to be cancelled or timed out.
-4. Close the database connection after operations are complete.
-5. Use indexes for frequently queried fields to improve performance.
+1. 始终使用环境变量管理数据库连接信息和其他敏感配置。
+2. 确保代码中包含完善的错误处理机制。
+3. 对于需要超时控制的操作，使用 Context 机制进行管理。
+4. 及时释放数据库连接等资源。
+5. 根据实际查询需求，为常用字段创建合适的索引以提升性能。
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请按以下步骤进行检查：
 
-1. Verify your MongoDB credentials in the `.env` file.
-2. Ensure your MongoDB database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the required packages are correctly installed.
+1. 验证 `.env` 文件中的 MongoDB 连接信息是否正确。
+2. 确认 MongoDB 数据库服务是否正常运行且可以访问。
+3. 检查 Devbox 环境的网络连接状态。
+4. 确保所有依赖包都已正确安装。
 
-For more detailed information on using MongoDB with Go, refer to the [official MongoDB Go driver documentation](https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo).
+想要深入了解 Go 语言操作 MongoDB 的更多细节，请参考 [MongoDB Go 驱动程序官方文档](https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo)。

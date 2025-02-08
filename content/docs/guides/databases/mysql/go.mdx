@@ -1,35 +1,36 @@
 ---
 title: Go
-description: Learn how to connect to MySQL databases in Sailos Devbox using Go
+description: 在 Sealos Devbox 中使用 Go 语言连接 MySQL 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a MySQL database using Go within your Sailos Devbox project.
+本教程将指导您如何在 Sealos Devbox 项目中使用 Go 语言连接和操作 MySQL 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Go environment
-- [A MySQL database created using the Database app in Sailos](./)
+- [已配置 Go 开发环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [在 Sealos 数据库应用中创建的 MySQL 数据库实例](./)
 
-## Install Required Packages
+## 安装依赖
 
-In your Cursor terminal, install the necessary packages:
+在 Cursor 终端中执行以下命令安装所需的依赖包：
 
 ```bash
 go get github.com/go-sql-driver/mysql
 go get github.com/joho/godotenv
 ```
 
-These commands install:
-- `github.com/go-sql-driver/mysql`: A MySQL driver for Go's database/sql package
-- `github.com/joho/godotenv`: A Go port of the Ruby dotenv library
+这些依赖包的作用：
 
-## Connection Setup
+- `github.com/go-sql-driver/mysql`：Go 语言的 MySQL 驱动程序，用于支持 database/sql 包操作 MySQL
+- `github.com/joho/godotenv`：用于加载和管理环境变量的工具包
+
+## 配置数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 设置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录下创建 `.env` 文件，添加以下数据库连接信息：
 
 ```ini title=".env"
 DB_HOST=your_database_host
@@ -39,11 +40,11 @@ DB_PASSWORD=your_password
 DB_NAME=your_database_name
 ```
 
-Replace the placeholders with your actual MySQL credentials from the Database app in Sailos.
+请将上述配置项替换为您在 Sealos 数据库应用中获取的实际 MySQL 连接信息。
 
-#### Create the main.go file
+#### 编写主程序
 
-Create a new file named `main.go` with the following content:
+创建 `main.go` 文件，实现数据库连接和基本操作：
 
 ```go title="main.go"
 package main
@@ -197,49 +198,54 @@ func main() {
 }
 ```
 
-Let's break down the main components of this code:
+代码主要包含以下几个部分：
 
-1. **Imports**: We import necessary packages, including `database/sql` for database operations and `github.com/go-sql-driver/mysql` as the MySQL driver.
+1. **包导入**：导入必要的标准库和第三方包，包括数据库操作相关的包。
 
-2. **Employee struct**: Defines the structure for our employee data.
+2. **数据结构定义**：定义 `Employee` 结构体用于存储员工信息。
 
-3. **connectDB function**: Loads environment variables, constructs the connection string, and establishes a connection to the database.
+3. **数据库连接**：`connectDB` 函数负责读取环境变量并建立数据库连接。
 
-4. **createTable function**: Creates the `employees` table if it doesn't exist.
+4. **表操作**：包含创建表、插入数据和查询数据的相关函数。
 
-5. **insertEmployee function**: Inserts a new employee into the database.
-
-6. **getEmployees function**: Retrieves all employees from the database.
-
-7. **main function**: Orchestrates the program flow, demonstrating database connection, table creation, data insertion, and retrieval.
+5. **主程序**：在 `main` 函数中展示完整的数据库操作流程。
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令运行程序：
 
 ```bash
 go run main.go
 ```
 
-This will execute the `main` function, demonstrating the connection to the database, table creation, data insertion, and querying.
+程序将依次执行数据库连接、创建表、插入数据和查询数据等操作，并在控制台输出执行结果。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for database credentials.
-2. Always handle potential errors using proper error checking.
-3. Close the database connection after operations are complete.
-4. Use prepared statements for queries to prevent SQL injection.
-5. Consider using a connection pool for better performance in production environments.
+1. **安全性**
+   - 使用环境变量管理敏感信息
+   - 采用参数化查询防止 SQL 注入
+   - 及时关闭数据库连接释放资源
 
-## Troubleshooting
+2. **错误处理**
+   - 对所有数据库操作进行错误检查
+   - 使用 defer 确保资源正确释放
+   - 合理记录错误信息便于调试
 
-If you encounter connection issues:
+3. **性能优化**
+   - 在生产环境中使用连接池
+   - 合理设置连接超时和重试策略
+   - 避免频繁建立和断开连接
 
-1. Verify your database credentials in the `.env` file.
-2. Ensure your MySQL database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the required packages are correctly installed.
+## 常见问题排查
 
-For more detailed information on using MySQL with Go, refer to the [go-sql-driver/mysql documentation](https://github.com/go-sql-driver/mysql).
+如果遇到连接问题，请检查以下几点：
+
+1. 确认 `.env` 文件中的连接信息是否正确
+2. 验证 MySQL 服务是否正常运行且可访问
+3. 检查网络配置是否存在限制
+4. 确保所需依赖包已正确安装
+
+更多详细信息，请参考 [go-sql-driver/mysql 官方文档](https://github.com/go-sql-driver/mysql)。

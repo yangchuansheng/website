@@ -1,35 +1,36 @@
 ---
 title: Go
-description: Learn how to connect to PostgreSQL databases in Sailos Devbox using Go
+description: 在 Sealos Devbox 中使用 Go 语言连接 PostgreSQL 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a PostgreSQL database using Go within your Sailos Devbox project.
+本教程将为你介绍如何在 Sealos Devbox 开发环境中使用 Go 语言连接并操作 PostgreSQL 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Go environment
-- [A PostgreSQL database created using the Database app in Sailos](./)
+在开始之前，请确保：
+- [已创建并配置好 Go 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已在 Sealos 数据库应用中创建好 PostgreSQL 数据库](./)
 
-## Install Required Packages
+## 安装依赖
 
-In your Cursor terminal, install the necessary packages:
+首先，在 Cursor 终端中运行以下命令来安装必需的依赖包：
 
 ```bash
 go get github.com/lib/pq
 go get github.com/joho/godotenv
 ```
 
-These commands install:
-- `github.com/lib/pq`: A pure Go PostgreSQL driver for the database/sql package
-- `github.com/joho/godotenv`: A Go port of the Ruby dotenv library
+这两个包各自的功能是：
+- `github.com/lib/pq`：为 database/sql 包提供的纯 Go 语言 PostgreSQL 驱动
+- `github.com/joho/godotenv`：Go 语言版本的环境变量管理工具，源自 Ruby 的 dotenv 库
 
-## Connection Setup
+## 配置连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+第一步是配置数据库连接所需的环境变量。在项目根目录下创建一个 `.env` 文件，并写入以下内容：
 
 ```ini title=".env"
 DB_HOST=your_database_host
@@ -39,11 +40,11 @@ DB_PASSWORD=your_password
 DB_NAME=your_database_name
 ```
 
-Replace the placeholders with your actual PostgreSQL credentials from the Database app in Sailos.
+请将上述占位符替换为你在 Sealos Database 应用中获取的实际 PostgreSQL 连接信息。
 
-#### Create the main.go file
+#### 编写 main.go 文件
 
-Create a new file named `main.go` with the following content:
+接下来，创建一个 `main.go` 文件并输入以下代码：
 
 ```go title="main.go"
 package main
@@ -186,49 +187,51 @@ func main() {
 }
 ```
 
-Let's break down the main components of this code:
+这段代码的核心组成部分：
 
-1. **Imports**: We import necessary packages, including `database/sql` for database operations and `github.com/lib/pq` as the PostgreSQL driver.
+1. **包的导入**：导入了必需的包，其中 `database/sql` 用于数据库操作，`github.com/lib/pq` 则作为 PostgreSQL 驱动。
 
-2. **Employee struct**: Defines the structure for our employee data.
+2. **Employee 结构体**：用于定义员工数据的结构。
 
-3. **connectDB function**: Loads environment variables, constructs the connection string, and establishes a connection to the database.
+3. **connectDB 函数**：实现了环境变量的加载、连接字符串的构建以及数据库的连接。
 
-4. **createTable function**: Creates the `employees` table if it doesn't exist.
+4. **createTable 函数**：用于创建员工表 (如果该表尚不存在)。
 
-5. **insertEmployee function**: Inserts a new employee into the database.
+5. **insertEmployee 函数**：实现向数据库中添加新员工记录的功能。
 
-6. **getEmployees function**: Retrieves all employees from the database.
+6. **getEmployees 函数**：负责查询并返回所有员工的信息。
 
-7. **main function**: Orchestrates the program flow, demonstrating database connection, table creation, data insertion, and retrieval.
+7. **main 函数**：作为程序入口，展示了完整的数据库操作流程。
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+要运行这个程序，只需在 Cursor 终端中输入以下命令：
 
 ```bash
 go run main.go
 ```
 
-This will execute the `main` function, demonstrating the connection to the database, table creation, data insertion, and querying.
+执行后，程序会依次展示数据库连接、表创建、数据插入和查询等完整的操作流程。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for database credentials.
-2. Always handle potential errors using proper error checking.
-3. Close the database connection after operations are complete.
-4. Use prepared statements for queries to prevent SQL injection.
-5. Consider using a connection pool for better performance in production environments.
+在实际开发中，请注意以下几点最佳实践：
 
-## Troubleshooting
+1. 始终使用环境变量来存储数据库凭据，避免硬编码。
+2. 对所有可能的错误情况进行完善的错误处理。
+3. 养成及时关闭数据库连接的好习惯。
+4. 使用预处理语句来防范 SQL 注入攻击。
+5. 在生产环境中，建议使用连接池来提升性能。
 
-If you encounter connection issues:
+## 常见问题排查
 
-1. Verify your database credentials in the `.env` file.
-2. Ensure your PostgreSQL database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the required packages are correctly installed.
+如果遇到连接问题，请按以下步骤排查：
 
-For more detailed information on using PostgreSQL with Go, refer to the [lib/pq documentation](https://pkg.go.dev/github.com/lib/pq).
+1. 仔细核对 `.env` 文件中的数据库连接信息是否准确。
+2. 检查 PostgreSQL 数据库是否正常运行且可以访问。
+3. 排查 Devbox 环境中是否存在网络限制。
+4. 确认所有依赖包是否已正确安装。
+
+想深入了解更多关于 Go 语言操作 PostgreSQL 的内容，欢迎查阅 [lib/pq 官方文档](https://pkg.go.dev/github.com/lib/pq)。

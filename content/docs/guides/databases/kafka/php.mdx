@@ -1,25 +1,31 @@
 ---
 title: PHP
-description: Learn how to connect to Kafka in Sailos Devbox using PHP
+description: 在 Sealos Devbox 中使用 PHP 连接并操作 Kafka 的完整指南
 ---
 
-This guide will walk you through the process of connecting to Kafka using PHP within your Sailos Devbox project.
+本指南将详细介绍如何在 Sealos Devbox 环境中使用 PHP 连接和操作 Kafka 消息队列服务。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with PHP environment
-- [A Kafka cluster created using the Database app in Sailos](./)
+在开始之前，请确保：
 
-## Install Required Extensions
+- [已在 Sealos Devbox 中创建并配置好 PHP 开发环境](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用成功创建 Kafka 集群](./)
 
-In your Cursor terminal, first install the necessary system dependencies:
+## 环境配置
+
+### 安装系统依赖
+
+首先，在 Devbox 运行环境的终端中安装必要的系统依赖：
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y librdkafka-dev
 ```
 
-Then, install the Kafka extension for PHP:
+### 安装 PHP 扩展
+
+接下来，为 PHP 安装并启用 Kafka 扩展：
 
 ```bash
 sudo pecl install rdkafka
@@ -27,15 +33,15 @@ sudo sh -c 'echo "extension=rdkafka.so" > /etc/php/*/mods-available/rdkafka.ini'
 sudo phpenmod rdkafka
 ```
 
-## Connection Setup
+## 连接设置
 
 <div className='steps [&_h4]:step'>
 
-#### Create a Configuration File
+#### 配置连接参数
 
-First, let's create a configuration file to store our Kafka connection parameters. Create a file named `config.php` in your project directory with the following content:
+首先创建一个配置文件来存储 Kafka 连接参数。在项目目录中新建 `config.php` 文件：
 
-```php
+```php title="config.php"
 <?php
 return [
     'brokers' => 'your_kafka_broker:9092',
@@ -44,13 +50,13 @@ return [
 ];
 ```
 
-Replace the placeholders with your actual Kafka credentials from the Database app in Sailos.
+请将配置文件中的占位符替换为您从 Sealos 数据库应用中获取的实际 Kafka 连接信息。
 
-#### Create a Kafka Producer
+#### 实现消息生产者
 
-Create a file named `kafka_producer.php` with the following content:
+创建 `kafka_producer.php` 文件，用于发送消息到 Kafka：
 
-```php
+```php title="kafka_producer.php"
 <?php
 $config = include 'config.php';
 
@@ -69,13 +75,11 @@ $producer->flush(10000);
 echo "Message sent: $message\n";
 ```
 
-This script creates a Kafka producer and sends a message to the specified topic.
+#### 实现消息消费者
 
-#### Create a Kafka Consumer
+创建 `kafka_consumer.php` 文件，用于接收和处理 Kafka 消息：
 
-Create another file named `kafka_consumer.php` with the following content:
-
-```php
+```php title="kafka_consumer.php"
 <?php
 $config = include 'config.php';
 
@@ -108,41 +112,39 @@ while (true) {
 }
 ```
 
-This script creates a Kafka consumer that listens for messages on the specified topic.
-
 </div>
 
-## Usage
+## 运行程序
 
-To run the producer script, use the following command in your Cursor terminal:
+在 Devbox 终端中运行生产者脚本：
 
 ```bash
 php kafka_producer.php
 ```
 
-To run the consumer script, open another terminal and use:
+打开另一个终端窗口运行消费者脚本：
 
 ```bash
 php kafka_consumer.php
 ```
 
-The consumer will start listening for messages. When you run the producer script, you should see the message being received by the consumer.
+消费者脚本将持续监听消息。当您运行生产者脚本时，消费者终端会显示接收到的消息内容。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for Kafka configuration details.
-2. Implement proper error handling and logging.
-3. Consider using a library like `monolog` for better logging capabilities.
-4. Implement a graceful shutdown mechanism for your consumer.
-5. Use compression for better performance when dealing with large messages or high throughput.
+1. 使用环境变量管理 Kafka 连接配置，避免硬编码敏感信息
+2. 实现完善的错误处理和日志记录机制
+3. 建议使用 `monolog` 等专业日志库增强日志功能
+4. 为消费者程序实现优雅的退出机制
+5. 处理大量消息时，建议启用消息压缩以提升性能
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查以下几点：
 
-1. Verify your Kafka broker address in the `config.php` file.
-2. Ensure your Kafka cluster is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the `rdkafka` extension is correctly installed and enabled.
+1. 确认 `config.php` 中的 Kafka 服务地址配置正确
+2. 验证 Kafka 集群状态是否正常运行
+3. 检查 Devbox 环境的网络连接是否正常
+4. 确保 `rdkafka` 扩展已正确安装并启用
 
-For more detailed information on using Kafka with PHP, refer to the [php-rdkafka documentation](https://github.com/arnaud-lb/php-rdkafka).
+更多关于 PHP 操作 Kafka 的详细信息，请参考 [php-rdkafka 官方文档](https://github.com/arnaud-lb/php-rdkafka)。

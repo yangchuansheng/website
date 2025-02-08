@@ -1,42 +1,44 @@
 ---
 title: Python
-description: Learn how to connect to PostgreSQL databases in Sailos Devbox using Python
+description: 在 Sealos Devbox 中使用 Python 连接 PostgreSQL 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a PostgreSQL database using Python within your Sailos Devbox project.
+本教程将详细介绍如何在 Sealos Devbox 项目中使用 Python 连接和操作 PostgreSQL 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Python environment
-- [A PostgreSQL database created using the Database app in Sailos](./)
+在开始之前，请确保你已经：
 
-## Activating the Python Environment
+- [创建并配置好 Python 运行环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [在 Sealos 数据库应用中创建了 PostgreSQL 数据库](./)
 
-Before you start, you need to activate the Python virtual environment in your Devbox. Open the terminal within Cursor IDE and run:
+## 启动 Python 环境
+
+首先，我们需要在 Devbox 中启动 Python 虚拟环境。在 Cursor IDE 的终端中执行以下命令：
 
 ```bash
 source ./bin/activate
 ```
 
-You should see your prompt change, indicating that the virtual environment is now active.
+当你看到终端提示符发生变化时，说明虚拟环境已经成功启动。
 
-## Installing psycopg2-binary
+## 安装 psycopg2-binary
 
-In your Cursor terminal, install `psycopg2-binary` using pip:
+在虚拟环境中，使用 pip 安装 PostgreSQL 的 Python 驱动程序 `psycopg2-binary`：
 
 ```bash
 pip install psycopg2-binary
 ```
 
-## Connection Setup
+## 配置连接
 
 <div className='steps [&_h4]:step'>
 
-#### Create a Configuration File
+#### 创建配置文件
 
-First, we'll create a configuration file to store our database connection parameters. This approach allows us to easily change settings without modifying our code.
+为了方便管理数据库连接参数，我们首先创建一个配置文件。这样可以在不修改代码的情况下灵活调整连接设置。
 
-Create a file named `database.ini` in your project directory with the following content:
+在项目根目录下创建 `database.ini` 文件，添加以下内容：
 
 ```ini title="database.ini"
 [postgresql]
@@ -47,13 +49,13 @@ password=your_password
 port=5432
 ```
 
-Replace `your_database_name`, `your_username`, and `your_password` with your actual PostgreSQL credentials from the Database app in Sailos.
+请将配置文件中的占位符替换为你在 Sealos 数据库应用中获取的实际 PostgreSQL 连接信息。
 
-#### Create a Configuration Loader
+#### 创建配置加载器
 
-Next, we'll create a Python module to load the configuration from our `database.ini` file. This module will use the built-in `configparser` to read the configuration data.
+接下来，我们创建一个 Python 模块来读取配置文件。这个模块将使用 Python 内置的 `configparser` 模块解析配置信息。
 
-Create a file named `config.py` with the following content:
+创建 `config.py` 文件并添加以下代码：
 
 ```python title="config.py"
 from configparser import ConfigParser
@@ -78,13 +80,13 @@ if __name__ == '__main__':
     print(config)
 ```
 
-This `load_config()` function reads the `database.ini` file and returns a dictionary with the connection parameters. If you run this script directly, it will print out the configuration, which can be useful for debugging.
+`load_config()` 函数会读取配置文件并以字典形式返回连接参数。直接运行此脚本可以验证配置是否正确读取。
 
-#### Create a Connection Function
+#### 创建数据库连接模块
 
-Now, we'll create a module that uses our configuration loader to connect to the PostgreSQL database.
+现在，我们创建一个模块来处理与 PostgreSQL 数据库的连接和查询操作。
 
-Create a file named `connect.py` with the following content:
+创建 `connect.py` 文件：
 
 ```python title="connect.py"
 import psycopg2
@@ -128,23 +130,23 @@ if __name__ == '__main__':
         print("Connection closed.")
 ```
 
-This module does several things:
+这个模块主要实现了以下功能：
 
-1. The `connect()` function uses `psycopg2.connect()` to establish a connection to the database using the configuration we loaded.
-2. The `execute_query()` function demonstrates how to execute a SQL query and fetch the results.
-3. In the `if __name__ == '__main__':` block, we test the connection by connecting to the database and querying its version.
+1. `connect()` 函数：使用 `psycopg2.connect()` 方法建立数据库连接
+2. `execute_query()` 函数：用于执行 SQL 查询并获取结果
+3. 主程序部分：通过查询数据库版本来测试连接是否成功
 
 </div>
 
-## Usage
+## 运行程序
 
-To test the connection, make sure your virtual environment is activated, then run the `connect.py` script:
+确保已启动 Python 虚拟环境后，执行以下命令来测试数据库连接：
 
 ```bash
 python connect.py
 ```
 
-If successful, you should see output similar to:
+如果连接成功，你将看到类似下面的输出：
 
 ```bash
 Connected to the PostgreSQL server.
@@ -152,22 +154,22 @@ PostgreSQL version: PostgreSQL 14.10 (Ubuntu 14.10-1.pgdg22.04+1) on x86_64-pc-l
 Connection closed.
 ```
 
-## Best Practices
+## 最佳实践
 
-1. Always activate the virtual environment before running your Python scripts or installing packages.
-2. Use a configuration file (`database.ini`) to store database credentials. This makes it easier to change settings without modifying your code.
-3. If using version control (e.g., git), add `database.ini` to your `.gitignore` file to avoid committing sensitive information.
-4. Use connection pooling for better performance in production environments.
-5. Always close database connections properly to avoid resource leaks.
-6. Use try-except blocks to handle potential database errors gracefully.
+1. 执行 Python 脚本或安装依赖包前，请确保已激活虚拟环境
+2. 使用配置文件管理数据库连接信息，便于维护和修改
+3. 在使用版本控制系统时，将包含敏感信息的 `database.ini` 添加到 `.gitignore` 中
+4. 在生产环境中建议使用连接池来提升性能
+5. 养成及时关闭数据库连接的习惯，避免资源泄露
+6. 合理使用异常处理机制，妥善处理可能出现的数据库错误
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请按以下步骤排查：
 
-1. Ensure you've activated the virtual environment with `source ./bin/activate`.
-2. Verify that your PostgreSQL database is running.
-3. Double-check your database credentials in the `database.ini` file.
-4. Check the PostgreSQL logs in the Database app for any error messages.
+1. 检查是否已使用 `source ./bin/activate` 命令启动虚拟环境
+2. 确认 PostgreSQL 数据库服务是否正常运行
+3. 仔细核对 `database.ini` 中的连接信息是否正确
+4. 查看数据库应用中的 PostgreSQL 日志，寻找可能的错误信息
 
-For more detailed information on using PostgreSQL with Python, refer to the [official psycopg2 documentation](https://www.psycopg.org/docs/).
+如需了解更多 Python 操作 PostgreSQL 的详细信息，请参考 [psycopg2 官方文档](https://www.psycopg.org/docs/)。

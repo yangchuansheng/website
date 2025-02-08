@@ -1,49 +1,48 @@
 ---
 title: PostgreSQL
-description: Deploy and connect to PostgreSQL databases in Sailos DevBox
+description: 在 Sealos Devbox 中部署和连接 PostgreSQL 数据库
 ---
 
-PostgreSQL is a powerful, open-source object-relational database system. In Sailos DevBox, you can easily set up and connect to PostgreSQL databases for your development projects.
+PostgreSQL 是一款功能强大的开源对象关系型数据库系统。通过 Sealos Devbox，您可以快速部署并使用 PostgreSQL 数据库来支持您的开发项目。
 
-## Deploy PostgreSQL in Sailos
+## 在 Sealos 中部署 PostgreSQL
 
-Sailos makes it easy to deploy a PostgreSQL database with just a few clicks. follow these steps:
+Sealos 提供了简单直观的操作界面，只需几步即可完成 PostgreSQL 数据库的部署。具体步骤如下：
 
 <div className='steps [&_h5]:step'>
 
-<h5>From the Sailos desktop, click on the "Database" icon to open the Database app.</h5>
+<h5>打开 [Sealos 控制台](https://cloud.sealos.run)，找到并点击"数据库"应用图标。</h5>
 
-![PostgreSQL](./images/postgresql-1.jpeg)
+![Sealos 数据库应用界面展示数据库服务入口](./images/sealos-postgresql-database-entry.jpg)
 
-<h5>Click on the "Create New Database" button. In the deployment form:</h5>
-   - Select "Postgres" as the database type.
-   - Choose the desired PostgreSQL version (e.g., postgresql-14.8.0).
-   - Enter a name for your database (use lowercase letters and numbers only).
-   - Adjust the CPU and Memory sliders to set the resources for your database.
-   - Set the number of replicas (1 for single-node development and testing).
-   - Specify the storage size (e.g., 3 Gi).
+<h5>在数据库应用界面中，点击"新建"按钮，然后在部署表单中填写以下信息：</h5>
 
-![PostgreSQL](./images/postgresql-2.png)
+   - 数据库类型：选择 ”Postgres”
+   - 版本：选择所需的 PostgreSQL 版本 (如：postgresql-14.8.0)
+   - 数据库名称：输入名称 (仅支持小写字母和数字的组合)
+   - 计算资源：通过滑块调整 CPU 和内存配置
+   - 副本数量：开发测试环境建议设置为 1
+   - 存储容量：设置所需的存储空间 (如：3 Gi)
 
-<h5>Review the projected cost on the left sidebar. Click the "Deploy" button in the top right corner to create your PostgreSQL database.</h5>
+![PostgreSQL 数据库部署配置界面，包含版本选择、资源配置等选项](./images/sealos-postgresql-deployment-config.png)
+
+<h5>确认配置无误后，您可以在左侧边栏查看预估成本，然后点击右上角的"部署"按钮开始创建数据库。</h5>
 
 </div>
 
-Once deployed, Sailos will provide you with the necessary connection details.
+部署完成后，系统会自动为您生成并显示数据库的连接信息。
 
-![PostgreSQL](./images/postgresql-3.png)
+![PostgreSQL 数据库连接信息界面，显示数据库访问凭证和连接参数](./images/sealos-postgresql-connection-info.png)
 
-## Connect to PostgreSQL in DevBox
+## 在 Sealos Devbox 中连接 PostgreSQL
 
-Here are examples of how to connect to your PostgreSQL database using different programming languages and frameworks within your DevBox environment:
+我们为不同的编程语言和框架提供了详细的 PostgreSQL 数据库连接指南，请点击下方相应的卡片查看：
 
 <Cards>
-  <Card title="Connect to PostgreSQL with Go in Sailos Devbox" href="./postgresql/go" />
-  <Card title="Connect to PostgreSQL with Java in Sailos Devbox" href="./postgresql/java" />
-  <Card title="Connect to PostgreSQL with Node.js in Sailos Devbox" href="./postgresql/nodejs" />
-  <Card title="Connect to PostgreSQL with PHP in Sailos Devbox" href="./postgresql/php" />
-  <Card title="Connect to PostgreSQL with Python in Sailos Devbox" href="./postgresql/python" />
-  <Card title="Connect to PostgreSQL with Rust in Sailos Devbox" href="./postgresql/rust" />
+<Card title="使用 Go 连接 PostgreSQL" href="./postgresql/go" />
+<Card title="使用 Java 连接 PostgreSQL" href="./postgresql/java" />
+<Card title="使用 Node.js 连接 PostgreSQL" href="./postgresql/nodejs" />
+<Card title="使用 PHP 连接 PostgreSQL" href="./postgresql/php" />
+<Card title="使用 Python 连接 PostgreSQL" href="./postgresql/python" />
+<Card title="使用 Rust 连接 PostgreSQL" href="./postgresql/rust" />
 </Cards>
-
-

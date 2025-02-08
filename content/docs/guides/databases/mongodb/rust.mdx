@@ -1,18 +1,20 @@
 ---
 title: Rust
-description: Learn how to connect to MongoDB databases in Sailos Devbox using Rust
+description: 在 Sealos Devbox 中使用 Rust 连接 MongoDB 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a MongoDB database using Rust within your Sailos Devbox project.
+本文将详细介绍如何在 Sealos Devbox 项目中使用 Rust 语言连接和操作 MongoDB 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Rust environment
-- [A MongoDB database created using the Database app in Sailos](./)
+在开始之前，请确保：
 
-## Install Required Dependencies
+- [已创建并配置好 Rust 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已在 Sealos 数据库应用中创建 MongoDB 数据库](./)
 
-In your Cursor terminal, add the necessary dependencies to your `Cargo.toml` file:
+## 添加依赖项
+
+在 Cursor 终端中，需要在项目的 `Cargo.toml` 文件中添加以下依赖：
 
 ```toml title="Cargo.toml"
 [dependencies]
@@ -23,30 +25,30 @@ serde = { version = "1.0", features = ["derive"] }
 futures-util = "0.3"
 ```
 
-These dependencies include:
-- `mongodb`: The official MongoDB driver for Rust
-- `tokio`: An asynchronous runtime for Rust
-- `dotenv`: A library for loading environment variables from a file
-- `serde`: A framework for serializing and deserializing Rust data structures
-- `futures-util`: Provides utility types for working with futures, including `StreamExt` which we'll use for cursor iteration
+这些依赖包的作用如下：
+- `mongodb`：MongoDB 官方提供的 Rust 驱动程序
+- `tokio`：Rust 异步运行时环境
+- `dotenv`：用于加载环境变量配置文件
+- `serde`：用于 Rust 数据结构序列化和反序列化
+- `futures-util`：提供异步编程工具，包括用于游标迭代的 `StreamExt` 特性
 
-## Connection Setup
+## 实现数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录创建 `.env` 文件，添加数据库连接信息：
 
 ```ini title=".env"
 MONGODB_URI=mongodb://your_username:your_password@your_database_host:27017/your_database_name?authSource=admin
 ```
 
-Replace the placeholders with your actual MongoDB credentials from the Database app in Sailos.
+请将上述配置中的占位符替换为您从 Sealos 数据库应用中获取的实际 MongoDB 连接信息。
 
-#### Create the main.rs file
+#### 编写主程序代码
 
-Create a new file named `src/main.rs` with the following content:
+创建 `src/main.rs` 文件，实现数据库连接和基本操作：
 
 ```rust title="src/main.rs"
 use mongodb::{Client, options::ClientOptions};
@@ -106,49 +108,42 @@ async fn main() -> mongodb::error::Result<()> {
 }
 ```
 
-Let's break down the main components of this code:
+代码主要实现了以下功能：
 
-1. **Imports**: We import necessary modules from `mongodb`, `dotenv`, `std::env`, and `serde`.
-
-2. **Employee struct**: We define a struct to represent our data, using Serde for serialization and deserialization.
-
-3. **Main function**: The `main` function is marked with `#[tokio::main]` to use Tokio's async runtime.
-
-4. **Environment setup**: We load environment variables from the `.env` file and retrieve the MongoDB URI.
-
-5. **Connection**: We create a MongoDB client using the URI and connect to the database.
-
-6. **Data insertion**: We insert a sample employee into the database.
-
-7. **Data querying**: We query and display all employees in the database.
+1. **导入必要模块**：引入 MongoDB 驱动、环境变量处理和序列化相关的模块
+2. **定义数据结构**：创建 `Employee` 结构体用于数据操作
+3. **异步主函数**：使用 `tokio` 运行时处理异步操作
+4. **环境配置**：从 `.env` 文件加载数据库连接信息
+5. **数据库连接**：创建 MongoDB 客户端并连接数据库
+6. **数据操作**：演示文档的插入和查询操作
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令运行程序：
 
 ```bash
 cargo run
 ```
 
-This will compile and execute the `main` function, demonstrating the connection to the database, document insertion, and querying.
+程序将执行数据库连接、插入示例数据和查询操作的完整流程。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for database credentials.
-2. Use the `dotenv` crate to manage environment variables in development.
-3. Implement proper error handling using Rust's `Result` type.
-4. Use Serde for serializing and deserializing data structures.
-5. Use async/await for efficient database operations.
+1. 妥善管理数据库凭据，使用环境变量存储敏感信息
+2. 在开发环境中使用 `dotenv` 管理配置
+3. 合理使用 Rust 的 `Result` 类型进行错误处理
+4. 利用 Serde 框架处理数据序列化
+5. 充分发挥 async/await 的优势实现高效操作
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查：
 
-1. Verify your MongoDB credentials in the `.env` file.
-2. Ensure your MongoDB database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that all required dependencies are correctly specified in your `Cargo.toml` file.
+1. `.env` 文件中的 MongoDB 连接信息是否正确
+2. MongoDB 数据库服务是否正常运行
+3. 网络环境是否存在访问限制
+4. `Cargo.toml` 中的依赖配置是否完整
 
-For more detailed information on using MongoDB with Rust, refer to the [MongoDB Rust driver documentation](https://docs.rs/mongodb/latest/mongodb/).
+更多 MongoDB Rust 驱动的详细信息，请参考[官方文档](https://docs.rs/mongodb/latest/mongodb/)。

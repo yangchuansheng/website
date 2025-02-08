@@ -1,43 +1,45 @@
 ---
 title: Go
-description: Learn how to connect to Kafka in Sailos Devbox using Go
+description: 在 Sealos Devbox 中使用 Go 连接 Kafka 的完整指南
 ---
 
-This guide will walk you through the process of connecting to Kafka using Go within your Sailos Devbox project.
+本文将详细介绍如何在 Sealos Devbox 中使用 Go 语言连接和操作 Kafka。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Go environment
-- [A Kafka cluster created using the Database app in Sailos](./)
+- [已创建并配置好 Go 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用创建 Kafka 集群](./)
 
-## Install Required Packages
+## 安装依赖
 
-In your Cursor terminal, install the necessary packages:
+在 Cursor 终端中执行以下命令安装所需的依赖包：
 
 ```bash
 go get github.com/joho/godotenv
 go get github.com/confluentinc/confluent-kafka-go/v2/kafka
 ```
 
-This command installs:
-- `github.com/confluentinc/confluent-kafka-go/v2/kafka`: The Confluent Kafka client for Go
+上述命令将安装：
 
-## System Dependencies
+- `github.com/confluentinc/confluent-kafka-go/v2/kafka`：用于 Go 语言的 Confluent Kafka 客户端
+- `github.com/joho/godotenv`：用于加载环境变量配置文件
 
-The `confluent-kafka-go` package requires `librdkafka` as a system dependency. In Sailos Devbox, you might need to install it manually. Run the following commands in your Cursor terminal:
+## 系统依赖
+
+由于 `confluent-kafka-go` 包依赖于 `librdkafka`，您需要在 Devbox 开发环境中安装相关系统依赖。请在 Cursor 终端中执行以下命令：
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y gcc libc6-dev librdkafka-dev
 ```
 
-## Connection Setup
+## 配置与实现
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-First, let's set up the environment variables for our Kafka connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录创建 `.env` 文件，添加 Kafka 连接所需的环境变量：
 
 ```ini title=".env"
 KAFKA_BROKER=your_kafka_host:9092
@@ -45,11 +47,11 @@ KAFKA_GROUP_ID=group-id
 KAFKA_TOPIC=topic-name
 ```
 
-Replace the placeholders with your actual Kafka broker address, group ID, and topic name from the Database app in Sailos.
+请将上述配置中的占位符替换为您从 Sealos 数据库应用中获取的实际 Kafka 连接信息。
 
-#### Create the main.go file
+#### 编写主程序
 
-Create a new file named `main.go` with the following content:
+创建 `main.go` 文件，实现 Kafka 消息的生产和消费功能：
 
 ```go title="main.go"
 package main
@@ -149,49 +151,49 @@ func main() {
 }
 ```
 
-Let's break down the main components of this code:
+代码主要包含以下几个部分：
 
-1. **Imports and Variables**: We import the necessary packages and define global variables for the broker address, group ID, and topic name.
+1. **导入和变量定义**：导入必要的包，并定义 Kafka 连接所需的全局变量。
 
-2. **startProducer function**: 
-   - Creates a new Kafka producer
-   - Uses a goroutine to handle delivery reports
-   - Produces sample messages to the specified topic
+2. **生产者实现 (startProducer 函数)**：
+   - 创建 Kafka 生产者实例
+   - 使用 goroutine 处理消息投递状态
+   - 向指定主题发送示例消息
 
-3. **startConsumer function**:
-   - Creates a new Kafka consumer
-   - Subscribes to the specified topic
-   - Continuously reads messages from the topic and prints them
+3. **消费者实现 (startConsumer 函数)**：
+   - 创建 Kafka 消费者实例
+   - 订阅指定主题
+   - 持续读取并处理消息
 
-4. **Main function**: Calls both `startProducer()` and `startConsumer()` to demonstrate producing and consuming messages.
+4. **主函数**：加载环境变量并启动生产者和消费者，演示完整的消息处理流程。
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+在运行环境终端中执行以下命令启动程序：
 
 ```bash
 go run main.go
 ```
 
-This will execute the `main` function, demonstrating both producing and consuming messages with Kafka.
+程序将演示 Kafka 消息的生产和消费过程。
 
-## Best Practices
+## 最佳实践
 
-1. In a real-world scenario, separate the producer and consumer into different applications or services.
-2. Use environment variables for Kafka configuration instead of hardcoding values.
-3. Implement proper error handling and logging.
-4. Implement graceful shutdown to properly close Kafka connections.
+1. 在生产环境中，建议将生产者和消费者分别部署为独立的服务。
+2. 使用环境变量管理配置信息，避免硬编码。
+3. 实现完善的错误处理和日志记录机制。
+4. 确保程序能够优雅关闭，正确释放 Kafka 连接资源。
 
-## Troubleshooting
+## 常见问题
 
-If you encounter connection issues:
+如果遇到连接问题，请检查以下几点：
 
-1. Verify your Kafka broker address in the `broker` variable.
-2. Ensure your Kafka cluster is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the required packages and system dependencies are correctly installed.
-5. If you encounter `cgo` related errors, make sure you have the necessary build tools installed (`sudo apt-get install build-essential`).
+1. 确认 Kafka 集群地址配置是否正确。
+2. 验证 Kafka 集群是否正常运行且可访问。
+3. 检查运行环境的网络配置是否有限制。
+4. 确保所有依赖包和系统组件已正确安装。
+5. 如果遇到 `cgo` 相关错误，请安装必要的构建工具 (执行 `sudo apt-get install build-essential`)。
 
-For more detailed information on using Kafka with Go, refer to the [confluent-kafka-go documentation](https://github.com/confluentinc/confluent-kafka-go).
+更多关于 Go 语言操作 Kafka 的详细信息，请参考 [confluent-kafka-go 官方文档](https://github.com/confluentinc/confluent-kafka-go)。

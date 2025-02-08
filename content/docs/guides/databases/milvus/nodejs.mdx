@@ -1,34 +1,35 @@
 ---
 title: Node.js
-description: Learn how to connect to Milvus databases in Sailos Devbox using Node.js
+description: 在 Sealos Devbox 中使用 Node.js 连接 Milvus 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a Milvus database using Node.js within your Sailos Devbox project.
+本指南将详细介绍如何在 Sealos Devbox 项目中使用 Node.js 连接和操作 Milvus 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Node.js environment
-- [A Milvus database created using the Database app in Sailos](./)
+- [已创建并正确配置 Node.js 开发环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用成功部署 Milvus 集群](./)
 
-## Install Required Packages
+## 安装依赖包
 
-In your Cursor terminal, install the necessary packages:
+在 Cursor 终端中执行以下命令安装必需的依赖包：
 
 ```bash
 npm install @zilliz/milvus2-sdk-node dotenv
 ```
 
-This command installs:
-- `@zilliz/milvus2-sdk-node`: The official Milvus Node.js SDK
-- `dotenv`: A zero-dependency module that loads environment variables from a `.env` file
+该命令将安装：
 
-## Connection Setup
+- `@zilliz/milvus2-sdk-node`：Milvus 官方的 Node.js SDK
+- `dotenv`：用于从 `.env` 文件加载环境变量的轻量级工具
+
+## 连接配置
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 设置环境变量
 
-First, let's set up the environment variables for our Milvus connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录创建 `.env` 文件，添加 Milvus 连接所需的配置信息：
 
 ```ini title=".env"
 MILVUS_HOST=your_milvus_host
@@ -37,11 +38,11 @@ COLLECTION_NAME=test_collection
 DIMENSION=128
 ```
 
-Replace the placeholders with your actual Milvus credentials from the Database app in Sailos.
+请使用 Sealos 数据库应用中的实际 Milvus 连接信息替换相应的配置值。
 
-#### Create a connection file
+#### 创建数据库连接文件
 
-Create a new file named `milvusClient.js` with the following content:
+新建 `milvusClient.js` 文件，用于配置数据库连接：
 
 ```javascript title="milvusClient.js"
 const { MilvusClient } = require('@zilliz/milvus2-sdk-node');
@@ -54,9 +55,9 @@ const client = new MilvusClient({
 module.exports = client;
 ```
 
-#### Create database operations
+#### 实现数据库操作
 
-Now, let's create a file named `milvusOperations.js` to handle our database operations:
+创建 `milvusOperations.js` 文件，实现数据库的基本操作功能：
 
 ```javascript title="milvusOperations.js"
 const client = require('./milvusClient');
@@ -167,9 +168,9 @@ module.exports = {
 };
 ```
 
-#### Create a main script
+#### 编写主程序
 
-Finally, let's create a `main.js` file to demonstrate all the operations:
+最后，创建 `main.js` 文件来演示所有操作：
 
 ```javascript title="main.js"
 const { createCollection, insertData, search } = require('./milvusOperations');
@@ -203,33 +204,33 @@ main();
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the script, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令运行示例程序：
 
 ```bash
 node main.js
 ```
 
-This will execute all the operations defined in the `main` function, demonstrating the connection to Milvus, collection creation, data insertion, and vector search.
+该命令将执行 `main` 函数中的所有操作，包括创建集合、插入数据和向量搜索。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for Milvus connection details.
-2. Create indexes for better search performance.
-3. Load collections before performing search operations.
-4. Implement proper error handling.
-5. Use batch operations for inserting multiple vectors.
-6. Release resources by releasing collections when they're no longer needed.
+1. 妥善保管 Milvus 连接信息，建议使用环境变量存储
+2. 为提高搜索性能，建议创建合适的索引
+3. 执行搜索操作前，确保已加载目标集合
+4. 实现完善的错误处理机制
+5. 批量插入数据时使用批处理操作
+6. 及时释放不再使用的集合，以节省系统资源
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查：
 
-1. Verify your Milvus credentials in the `.env` file.
-2. Ensure your Milvus database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the required packages are correctly installed.
-5. Verify that the vector dimensions match your collection schema.
+1. `.env` 文件中的 Milvus 连接信息是否正确
+2. Milvus 数据库是否正常运行且可访问
+3. Devbox 运行环境是否存在网络限制
+4. 相关依赖包是否已正确安装
+5. 向量维度是否与集合配置匹配
 
-For more detailed information on using Milvus with Node.js, refer to the [Milvus Node.js SDK documentation](https://github.com/milvus-io/milvus-sdk-node).
+更多关于 Milvus Node.js SDK 的详细信息，请参阅[官方文档](https://github.com/milvus-io/milvus-sdk-node)。

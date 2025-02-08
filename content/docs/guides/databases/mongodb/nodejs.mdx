@@ -1,44 +1,47 @@
 ---
 title: Node.js
-description: Learn how to connect to MongoDB databases in Sailos Devbox using Node.js
+description: 在 Sealos Devbox 中使用 Node.js 连接 MongoDB 数据库的详细指南
 ---
 
-This guide will walk you through the process of connecting to a MongoDB database using Node.js within your Sailos Devbox project.
+本文将详细介绍如何在 Sealos Devbox 项目中使用 Node.js 连接和操作 MongoDB 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Node.js environment
-- [A MongoDB database created using the Database app in Sailos](./)
+在开始之前，请确保：
 
-## Install Required Packages
+- [已创建并配置好 Node.js 运行环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用创建 MongoDB 数据库实例](./)
 
-In your Cursor terminal, install the necessary packages:
+## 安装依赖包
+
+在 Cursor 终端中执行以下命令安装所需的依赖包：
 
 ```bash
 npm install mongodb dotenv
 ```
 
-This command installs:
-- `mongodb`: The official MongoDB driver for Node.js
-- `dotenv`: A zero-dependency module that loads environment variables from a `.env` file
+这将安装以下两个包：
 
-## Connection Setup
+- `mongodb`：MongoDB 官方提供的 Node.js 驱动程序
+- `dotenv`：用于从 `.env` 文件加载环境变量的轻量级模块
+
+## 配置数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录创建 `.env` 文件，用于存储数据库连接信息：
 
 ```ini title=".env"
 MONGO_URI=mongodb://your_username:your_password@your_database_host:27017/your_database_name?authSource=admin
 ```
 
-Replace the placeholders with your actual MongoDB credentials from the Database app in Sailos.
+请将上述配置中的占位符替换为您从 Sealos 数据库应用获取的实际 MongoDB 连接信息。
 
-#### Create a connection file
+#### 创建数据库连接文件
 
-Next, create a file named `db.js` with the following content:
+接下来，创建 `db.js` 文件来处理数据库连接：
 
 ```javascript title="db.js"
 const { MongoClient } = require('mongodb');
@@ -61,11 +64,11 @@ async function connectToDatabase() {
 module.exports = { connectToDatabase, client };
 ```
 
-This file creates a MongoDB client and exports a function to connect to the database.
+此文件创建了 MongoDB 客户端实例并导出数据库连接函数。
 
-#### Create database operations
+#### 实现数据库操作
 
-Now, let's create a file named `dbOperations.js` to handle our database operations:
+创建 `dbOperations.js` 文件，实现基本的数据库操作功能：
 
 ```javascript title="dbOperations.js"
 const { connectToDatabase, client } = require('./db');
@@ -106,9 +109,9 @@ module.exports = {
 };
 ```
 
-#### Create a main script
+#### 编写示例代码
 
-Finally, let's create a `main.js` file to demonstrate all the operations:
+最后，创建 `main.js` 文件来演示各项数据库操作：
 
 ```javascript title="main.js"
 const {
@@ -151,31 +154,31 @@ main();
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the script, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令运行示例代码：
 
 ```bash
 node main.js
 ```
 
-This will execute all the operations defined in the `main` function, demonstrating the connection to the database, document creation, reading, updating, and deletion.
+这将执行 `main.js` 中定义的一系列数据库操作，包括文档的创建、读取、更新和删除。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for database credentials.
-2. Use connection pooling for better performance (MongoDB driver handles this automatically).
-3. Always handle potential errors using try-catch blocks.
-4. Close the database connection after operations are complete.
-5. Use indexes for frequently queried fields to improve performance.
+1. 始终使用环境变量管理数据库连接信息，避免硬编码
+2. 利用 MongoDB 驱动程序提供的连接池机制提升性能
+3. 使用 try-catch 语句妥善处理可能出现的错误
+4. 及时关闭不再使用的数据库连接
+5. 为常用查询字段创建索引以提高查询效率
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查以下几点：
 
-1. Verify your MongoDB credentials in the `.env` file.
-2. Ensure your MongoDB database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the `mongodb` package is correctly installed.
+1. 确认 `.env` 文件中的 MongoDB 连接信息是否正确
+2. 验证 MongoDB 数据库服务是否正常运行且可访问
+3. 检查网络配置是否存在访问限制
+4. 确保正确安装了 `mongodb` 依赖包
 
-For more detailed information on using MongoDB with Node.js, refer to the [official MongoDB Node.js driver documentation](https://docs.mongodb.com/drivers/node/).
+更多关于 Node.js MongoDB 驱动程序的详细信息，请参考 [MongoDB Node.js 驱动官方文档](https://docs.mongodb.com/drivers/node/)。

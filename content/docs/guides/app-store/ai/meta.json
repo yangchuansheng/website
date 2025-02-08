@@ -1,0 +1,5 @@
+{
+    "defaultOpen": true,
+    "title": "AI 应用",
+    "pages": ["[安装 FastGPT](https://template.hzh.sealos.run/deploy?templateName=fastgpt)", "[安装 chatgpt-on-wechat](https://template.hzh.sealos.run/deploy?templateName=chatgpt-on-wechat)", "[安装 One API](https://template.hzh.sealos.run/deploy?templateName=one-api)", "[安装 Dify](https://template.hzh.sealos.run/deploy?templateName=dify)", "[安装 Lobe Chat](https://template.hzh.sealos.run/deploy?templateName=lobe-chat)"]
+}

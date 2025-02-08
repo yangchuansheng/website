@@ -1,22 +1,22 @@
 ---
 title: Java
-description: Learn how to connect to Kafka in Sailos Devbox using Java
+description: 在 Sealos Devbox 中使用 Java 连接 Kafka 的完整指南
 ---
 
-This guide will walk you through the process of connecting to Kafka using Java within your Sailos Devbox project.
+本文介绍如何在 Sealos Devbox 环境中使用 Java 连接和操作 Kafka。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Java environment
-- [A Kafka cluster created using the Database app in Sailos](./)
+- [已创建并配置好 Java 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用创建 Kafka 集群](./)
 
-## Project Setup
+## 项目配置
 
 <div className='steps [&_h4]:step'>
 
-#### Create a new Maven project
+#### 创建 Maven 项目
 
-In your Sailos Devbox terminal, initialize a new Maven project:
+在 Cursor 终端中，执行以下命令初始化 Maven 项目：
 
 ```bash
 mvn archetype:generate -DgroupId=com.example -DartifactId=kafka-java-example -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
@@ -25,11 +25,11 @@ rm -rf kafka-java-example
 rm -rf test
 ```
 
-#### Update pom.xml
+#### 配置 pom.xml
 
-Replace the content of your `pom.xml` file with the following:
+将项目的 `pom.xml` 文件替换为以下内容：
 
-```xml
+```xml title="pom.xml"
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -95,25 +95,25 @@ Replace the content of your `pom.xml` file with the following:
 </project>
 ```
 
-This `pom.xml` file includes the necessary dependencies (Kafka client and SLF4J for logging) and configures the Maven Shade plugin to create an executable JAR.
+这个 `pom.xml` 文件包含必需的依赖项 (Kafka 客户端和用于日志记录的 SLF4J)，并配置 Maven Shade 插件以创建可执行的 JAR。
 
-#### Create a configuration file
+#### 添加配置文件
 
-Create a file named `kafka.properties` in the `src/main/resources` directory:
+在 `src/main/resources` 目录下创建 `kafka.properties` 配置文件：
 
-```ini
+```ini title="kafka.properties"
 bootstrap.servers=your_kafka_bootstrap_servers:9092
 topic=your_topic_name
 group.id=your_consumer_group_id
 ```
 
-Replace the placeholders with your actual Kafka credentials from the Database app in Sailos.
+将占位符替换为您从 Sealos 桌面中数据库应用获取的实际 Kafka 凭据。
 
-#### Create Java classes
+#### 编写 Java 代码
 
-Create the following Java classes in the `src/main/java/com/example` directory:
+在 `src/main/java/com/example` 目录下创建以下 Java 类：
 
-1. `KafkaProducerExample.java`:
+1. `KafkaProducerExample.java`：
 
 ```java
 package com.example;
@@ -164,11 +164,11 @@ public class KafkaProducerExample {
 }
 ```
 
-This class demonstrates how to create a Kafka producer, send a message, and handle the result asynchronously.
+该类演示如何创建 Kafka 生产者、发送消息以及异步处理结果。
 
-2. `KafkaConsumerExample.java`:
+2. `KafkaConsumerExample.java`：
 
-```java
+```java title="KafkaConsumerExample.java"
 package com.example;
 
 import org.apache.kafka.clients.consumer.*;
@@ -217,15 +217,15 @@ public class KafkaConsumerExample {
 }
 ```
 
-This class shows how to create a Kafka consumer, subscribe to a topic, and continuously poll for new messages.
+该类展示如何创建 Kafka 消费者、订阅主题并持续轮询新消息。
 
 </div>
 
-Both classes use a loadConfig() method to read the Kafka properties from the kafka.properties file, allowing for easy configuration changes without modifying the code.
+以上两个类都通过 loadConfig() 方法从 kafka.properties 文件中读取 Kafka 配置信息，这样可以在不修改代码的情况下灵活更改配置。
 
-## Build and Run
+## 构建与运行
 
-To build and run the project, use the following commands in your terminal:
+在运行环境终端中执行以下命令来构建和运行项目：
 
 ```bash
 mvn clean package
@@ -233,23 +233,23 @@ java -cp target/kafka-java-example-1.0-SNAPSHOT.jar com.example.KafkaProducerExa
 java -cp target/kafka-java-example-1.0-SNAPSHOT.jar com.example.KafkaConsumerExample
 ```
 
-Run the producer and consumer in separate terminal windows to see the message being sent and received.
+建议在不同的终端窗口中分别运行生产者和消费者程序，以便观察消息的发送和接收过程。
 
-## Best Practices
+## 最佳实践
 
-1. Use a properties file to store Kafka configuration details.
-2. Implement proper error handling and logging.
-3. Use the try-with-resources statement to ensure that Kafka producers and consumers are properly closed.
-4. Consider using Kafka's AdminClient for managing topics and other Kafka resources.
-5. Implement proper serialization and deserialization for your message keys and values.
+1. 将 Kafka 配置信息统一存储在配置文件中
+2. 实现合适的错误处理和日志记录机制
+3. 使用 try-with-resources 语句确保 Kafka 生产者和消费者正确关闭
+4. 考虑使用 Kafka AdminClient 来管理主题和其他 Kafka 资源
+5. 为消息的键值对实现合适的序列化和反序列化方法
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查以下几点：
 
-1. Verify your Kafka credentials in the `kafka.properties` file.
-2. Ensure your Kafka cluster is running and accessible from your Devbox environment.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that all required dependencies are correctly specified in your `pom.xml` file.
+1. 确认 `kafka.properties` 文件中的 Kafka 连接信息是否正确
+2. 验证 Kafka 集群是否正常运行且可以从运行环境访问
+3. 检查运行环境的网络配置是否有限制
+4. 确保 `pom.xml` 文件中的所有依赖项配置正确
 
-For more detailed information on using Kafka with Java, refer to the [Apache Kafka documentation](https://kafka.apache.org/documentation/).
+更多关于 Java 操作 Kafka 的详细信息，请参考 [Apache Kafka 官方文档](https://kafka.apache.org/documentation/)。

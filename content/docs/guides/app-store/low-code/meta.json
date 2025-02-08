@@ -1,0 +1,4 @@
+{
+    "title": "低代码",
+    "pages": ["[安装多维表格 Teable](https://template.hzh.sealos.run/deploy?templateName=teable)", "[安装 BI 工具 DataEase](https://template.hzh.sealos.run/deploy?templateName=dataease)", "[安装 NocoDB](https://template.hzh.sealos.run/deploy?templateName=nocodb)", "[安装低代码框架 PagePlug](https://template.hzh.sealos.run/deploy?templateName=pageplug)"]
+}

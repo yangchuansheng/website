@@ -1,28 +1,28 @@
 ---
 title: Java
-description: Learn how to connect to MySQL databases in Sailos Devbox using Java
+description: 在 Sealos Devbox 中使用 Java 连接 MySQL 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a MySQL database using Java within your Sailos Devbox project, including basic CRUD (Create, Read, Update, Delete) operations.
+本教程将指导您如何在 Sealos Devbox 项目中使用 Java 连接 MySQL 数据库，并实现基本的数据库增删改查 (CRUD) 操作。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Java environment
-- [A MySQL database created using the Database app in Sailos](./)
+- [已创建并配置 Java 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用创建的 MySQL 实例](./)
 
-## Setup
+## 开发步骤
 
 <div className='steps [&_h4]:step'>
 
-#### Download MySQL JDBC Driver
+#### 安装 MySQL JDBC 驱动
 
-To connect to the MySQL server from a Java program, you need a MySQL JDBC driver.
+要实现 Java 程序与 MySQL 数据库的连接，首先需要安装 MySQL JDBC 驱动程序。
 
-You can download the latest version of the driver from the [MySQL Connector/J download page](https://dev.mysql.com/downloads/connector/j/). The downloaded file is a JAR file, e.g., mysql-connector-j-9.0.0.jar.
+请前往 [MySQL Connector/J 下载页面](https://dev.mysql.com/downloads/connector/j/)下载最新版本的驱动程序 (JAR 格式文件，如 mysql-connector-j-9.0.0.jar)。
 
-#### Create a database configuration file
+#### 配置数据库连接
 
-Create a file named `db.properties` in your project directory with the following content:
+在项目根目录创建 `db.properties` 配置文件：
 
 ```ini title="db.properties"
 db.url=jdbc:mysql://your_database_host:3306/your_database_name
@@ -30,11 +30,11 @@ db.username=your_username
 db.password=your_password
 ```
 
-Replace the placeholders with your actual MySQL credentials from the Database app in Sailos.
+请将配置项替换为您在 Sealos 数据库应用中获取的 MySQL 连接信息。
 
-#### Create a DatabaseConfig class
+#### 创建数据库配置类
 
-Create a new file named `DatabaseConfig.java` with the following content:
+新建 `DatabaseConfig.java` 文件，用于读取和管理数据库配置：
 
 ```java title="DatabaseConfig.java"
 import java.io.IOException;
@@ -70,17 +70,15 @@ public class DatabaseConfig {
 }
 ```
 
-The `DatabaseConfig` class is responsible for loading database configuration from the `db.properties` file. It has three static methods that expose the database configuration:
+`DatabaseConfig` 类提供以下功能：
 
-- `getDbUrl()` – Returns the database URL.
-- `getDbUsername()` – Returns the username.
-- `getDbPassword()` – Returns the password.
+- 从 `db.properties` 文件读取数据库配置信息
+- 通过静态方法获取数据库连接参数
+- 避免在代码中硬编码敏感信息
 
-This class ensures that sensitive database credentials are not hardcoded in the application.
+#### 定义数据模型
 
-#### Create an Employee class
-
-Create a new file named `Employee.java` with the following content:
+创建 `Employee.java` 文件，定义员工数据模型：
 
 ```java title="Employee.java"
 public class Employee {
@@ -112,12 +110,11 @@ public class Employee {
     }
 }
 ```
+`Employee` 类定义了员工的数据结构。它包含员工编号、姓名和职位字段，并提供构造方法、getter/setter 方法，以及一个方便打印员工信息的 `toString` 方法。
 
-The `Employee` class represents the data model for an employee. It includes fields for id, name, and position, along with a constructor, getters, setters, and a `toString` method for easy printing of employee information.
+#### 实现数据库操作
 
-#### Create a DB class
-
-Create a new file named `DB.java` with the following content:
+创建 `DB.java` 文件，实现数据库连接和 CRUD 操作：
 
 ```java title="DB.java"
 import java.sql.*;
@@ -192,17 +189,16 @@ public class DB {
     }
 }
 ```
+`DB` 类用于处理所有数据库相关操作：
 
-The `DB` class is responsible for database operations:
+- `getConnection()` 方法通过 `DatabaseConfig` 中配置的连接参数来连接 MySQL 数据库。
+- 连接成功时会返回一个 `Connection` 对象，连接失败则会抛出 `SQLException` 异常。
+- 其他方法 (如 `createTable`、`insertEmployee` 等) 都会使用这个连接来执行 CRUD 操作。
+- 每个方法都会创建一个新的连接，执行相应操作后，连接会通过 try-with-resources 机制自动关闭，以确保资源得到妥善管理。
 
-- The `getConnection()` method connects to the MySQL database using the connection parameters from `DatabaseConfig`.
-- It returns a `Connection` object if successful, or throws a `SQLException` if there's an error.
-- Other methods (`createTable`, `insertEmployee`, etc.) use this connection to perform CRUD operations.
-- Each method opens a new connection, performs its operation, and then closes the connection using try-with-resources, ensuring proper resource management.
+#### 编写主程序
 
-#### Create the main Java program
-
-Create a new file named `Main.java` with the following content:
+创建 `Main.java` 文件，测试数据库操作：
 
 ```java title="Main.java"
 import java.sql.SQLException;
@@ -251,43 +247,56 @@ public class Main {
 }
 ```
 
-The `Main` class demonstrates the usage of the `DB` class to perform various database operations:
+`Main` 类展示了如何使用 `DB` 类来执行各种数据库操作：
 
-- It creates a table, inserts sample data, retrieves and displays employees, updates an employee, deletes an employee, and displays the updated list.
-- Each operation is wrapped in a try-catch block to handle potential `SQLException`s.
-- The program uses the methods from the `DB` class, which manage their own connections, ensuring that connections are properly opened and closed for each operation.
+- 依次执行创建数据表、插入示例数据、查询并展示员工信息、更新员工信息、删除员工记录，并最终显示更新后的完整列表等操作。
+- 每个数据库操作都使用 try-catch 语句块进行异常处理，以捕获可能出现的 `SQLException`。
+- 程序通过调用 `DB` 类的方法来执行操作，这些方法能够自动管理数据库连接，确保每次操作时都能正确建立连接并在完成后关闭。
 
 </div>
 
-## Compile and Run
+## 编译和运行
 
-To compile and run the example, use the following commands in your terminal:
+在终端中执行以下命令来编译并运行程序：
 
 ```bash
 javac -cp .:mysql-connector-j-9.0.0.jar *.java
 java -cp .:mysql-connector-j-9.0.0.jar Main
 ```
 
-Make sure to replace `mysql-connector-j-9.0.0.jar` with the actual name of your MySQL JDBC driver JAR file.
+注意：请将命令中的 `mysql-connector-j-9.0.0.jar` 替换为您实际下载的驱动程序文件名。
 
-If everything is set up correctly, you should see output demonstrating the CRUD operations on the employees table.
+## 最佳实践
 
-## Best Practices
+1. **数据库配置管理**
+   - 使用配置文件存储连接信息
+   - 避免在代码中硬编码敏感数据
+   - 实现专门的配置管理类
 
-1. Use a properties file to store database connection details.
-2. Implement a configuration class to load and provide access to database properties.
-3. Create a separate class for database connection management and operations.
-4. Use try-with-resources to ensure proper closure of database connections.
-5. Use prepared statements to prevent SQL injection.
-6. Handle exceptions appropriately and provide meaningful error messages.
+2. **代码最佳实践**
+   - 使用预处理语句防止 SQL 注入
+   - 采用 try-with-resources 自动关闭资源
+   - 统一的异常处理机制
 
-## Troubleshooting
+3. **性能优化**
+   - 合理管理数据库连接
+   - 及时释放资源
+   - 批量处理大量数据
 
-If you encounter connection issues:
+## 常见问题排查
 
-1. Verify your database credentials in the `db.properties` file.
-2. Ensure your MySQL database is running and accessible from your Devbox environment.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the MySQL JDBC driver JAR file is in the same directory as your Java files.
+如果遇到连接问题，请检查：
 
-For more detailed information on using MySQL with Java, refer to the [official MySQL Connector/J documentation](https://dev.mysql.com/doc/connector-j/en/).
+1. 数据库连接信息是否正确
+   - 检查 `db.properties` 中的配置
+   - 确认数据库用户名和密码
+
+2. 网络连接是否正常
+   - 确保 MySQL 实例可访问
+   - 检查 Devbox 网络设置
+
+3. 开发环境配置
+   - JDBC 驱动是否正确安装
+   - Java 环境变量是否配置正确
+
+更多详细信息，请参考 [MySQL Connector/J 官方文档](https://dev.mysql.com/doc/connector-j/en/)。

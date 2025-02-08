@@ -1,36 +1,36 @@
 ---
 title: Rust
-description: Learn how to connect to Redis databases in Sailos Devbox using Rust
+description: 在 Sealos Devbox 中使用 Rust 连接 Redis 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a Redis database using Rust within your Sailos Devbox project.
+本教程将指导您如何在 Sealos Devbox 项目中使用 Rust 语言连接和操作 Redis 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Rust environment
-- [A Redis database created using the Database app in Sailos](./)
+- [已创建并配置好 Rust 开发环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已在 Sealos 数据库应用中创建的 Redis 实例](./)
 
-## Install Required Dependencies
+## 安装依赖
 
-In your Cursor terminal, add the necessary dependencies to your `Cargo.toml` file:
+在项目中，您需要在 `Cargo.toml` 文件中添加以下依赖项：
 
-```toml
+```toml title="Cargo.toml"
 [dependencies]
 redis = "0.22.0"
 dotenv = "0.15.0"
 ```
 
-These dependencies include:
-- `redis`: The Redis client for Rust
-- `dotenv`: A library for loading environment variables from a file
+这些依赖项包括：
+- `redis`：用于 Redis 数据库操作的 Rust 客户端
+- `dotenv`：用于管理环境变量配置的工具库
 
-## Connection Setup
+## 配置连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，我们需要配置数据库连接信息。在项目根目录下创建 `.env` 文件，添加以下内容：
 
 ```ini title=".env"
 REDIS_HOST=your_redis_host
@@ -38,11 +38,11 @@ REDIS_PORT=6379
 REDIS_PASSWORD=your_redis_password
 ```
 
-Replace the placeholders with your actual Redis credentials from the Database app in Sailos.
+请将上述配置中的占位符替换为您从 Sealos 数据库应用中获取的实际 Redis 连接信息。
 
-#### Create the main.rs file
+#### 编写主程序代码
 
-Create a new file named `src/main.rs` with the following content:
+创建 `src/main.rs` 文件，添加以下代码：
 
 ```rust title="src/main.rs"
 use redis::Commands;
@@ -91,45 +91,45 @@ fn main() -> redis::RedisResult<()> {
 }
 ```
 
-Let's break down the main components of this code:
+这段代码的主要组成部分：
 
-1. **Imports**: We import necessary modules from `redis` and `dotenv` crates.
+1. **导入依赖**：引入 `redis` 和 `dotenv` 模块中所需的功能。
 
-2. **Main function**: The `main` function is where we perform our Redis operations.
+2. **主函数定义**：`main` 函数作为程序入口点，包含所有 Redis 操作逻辑。
 
-3. **Environment setup**: We load environment variables from the `.env` file and retrieve the Redis connection details.
+3. **环境配置加载**：从 `.env` 文件读取并解析 Redis 连接参数。
 
-4. **Connection**: We create a Redis client and establish a connection.
+4. **建立连接**：创建 Redis 客户端实例并建立数据库连接。
 
-5. **Basic operations**: We demonstrate setting and getting a key, as well as working with Redis hashes.
+5. **基础操作示例**：演示了常用的 Redis 操作，包括键值对的设置、获取，以及哈希表的操作。
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+要运行此示例程序，请在终端中执行以下命令：
 
 ```bash
 cargo run
 ```
 
-This will compile and execute the `main` function, demonstrating the connection to Redis and basic operations.
+执行后，程序将编译并运行 `main` 函数中的 Redis 操作示例。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for Redis credentials.
-2. Handle errors appropriately using Rust's `Result` type.
-3. Use the `redis::Commands` trait for a more idiomatic way of interacting with Redis.
-4. Close the Redis connection when it's no longer needed (in this case, it's handled automatically when `con` goes out of scope).
-5. Consider using connection pooling for better performance in production environments.
+1. 将数据库连接信息存储在环境变量中，避免硬编码。
+2. 充分利用 Rust 的 `Result` 类型进行错误处理。
+3. 使用 `redis::Commands` trait 实现更符合 Rust 风格的 Redis 操作。
+4. 及时释放数据库连接 (在本例中，`con` 变量超出作用域时会自动处理)。
+5. 在生产环境中建议使用连接池来提高性能和连接管理效率。
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查以下几点：
 
-1. Verify your Redis credentials in the `.env` file.
-2. Ensure your Redis database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that all required dependencies are correctly specified in your `Cargo.toml` file.
+1. 确认 `.env` 文件中的 Redis 连接信息是否正确。
+2. 验证 Redis 实例是否正常运行且可以访问。
+3. 检查 Devbox 环境的网络连接是否正常。
+4. 确保 `Cargo.toml` 中的依赖项配置正确且完整。
 
-For more detailed information on using Redis with Rust, refer to the [redis-rs documentation](https://docs.rs/redis/latest/redis/).
+更多关于 Rust 操作 Redis 的详细信息，请参阅 [redis-rs 官方文档](https://docs.rs/redis/latest/redis/)。

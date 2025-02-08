@@ -1,22 +1,22 @@
 ---
 title: Java
-description: Learn how to connect to MongoDB databases in Sailos Devbox using Java
+description: 在 Sealos Devbox 中使用 Java 连接并操作 MongoDB 数据库的详细指南
 ---
 
-This guide will walk you through the process of connecting to a MongoDB database using Java within your Sailos Devbox project.
+本教程将详细介绍如何在 Sealos Devbox 项目中使用 Java 语言连接和操作 MongoDB 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Java environment
-- [A MongoDB database created using the Database app in Sailos](./)
+- [已在 Sealos Devbox 中配置好 Java 开发环境的项目](/docs/guides/fundamentals/create-a-project)
+- [通过 Sealos 数据库应用创建的 MongoDB 实例](./)
 
-## Project Setup
+## 项目配置
 
 <div className='steps [&_h4]:step'>
 
-#### Create a new Maven project
+#### 创建 Maven 项目
 
-In your Sailos Devbox terminal, initialize a new Maven project:
+在 Cursor 终端中执行以下命令创建一个新的 Maven 项目：
 
 ```bash
 mvn archetype:generate -DgroupId=com.example -DartifactId=mongodb-java-example -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
@@ -24,9 +24,9 @@ mv mongodb-java-example/* .
 rm -rf mongodb-java-example/
 ```
 
-#### Project Structure
+#### 项目目录结构
 
-After setting up, your project structure should look like this:
+完成配置后，项目的目录结构如下：
 
 ```
 /
@@ -48,9 +48,9 @@ After setting up, your project structure should look like this:
 │                   └── AppTest.java
 ```
 
-#### Update pom.xml
+#### 配置 pom.xml 文件
 
-Replace the content of your `pom.xml` file with the following:
+将 `pom.xml` 文件内容替换为以下配置：
 
 ```xml title="pom.xml"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -124,24 +124,24 @@ Replace the content of your `pom.xml` file with the following:
 </project>
 ```
 
-This `pom.xml` file includes the necessary dependencies (MongoDB Java driver and Logback for logging) and configures the Maven Shade plugin to create an executable JAR.
+上述配置文件包含了所需的依赖项 (MongoDB Java 驱动和 Logback 日志框架)，并通过 Maven Shade 插件配置了可执行 JAR 包的生成。
 
-#### Create a configuration file
+#### 创建配置文件
 
-Create a file named `mongodb.properties` in the `src/main/resources` directory:
+在 `src/main/resources` 目录下创建 `mongodb.properties` 配置文件：
 
 ```ini title="mongodb.properties"
 mongodb.uri=mongodb://your_mongodb_host:27017
 mongodb.database=your_database_name
 ```
 
-Replace the placeholders with your actual MongoDB credentials from the Database app in Sailos.
+请将配置文件中的占位符替换为您在 Sealos 数据库应用中获取的实际 MongoDB 连接信息。
 
-#### Create Java classes
+#### 创建 Java 类文件
 
-Create the following Java classes in the `src/main/java/com/example` directory:
+在 `src/main/java/com/example` 目录下创建以下三个 Java 类：
 
-1. `MongoConfig.java`:
+1. `MongoConfig.java`：用于加载 MongoDB 连接配置
 
 ```java title="MongoConfig.java"
 package com.example;
@@ -175,9 +175,7 @@ public class MongoConfig {
 }
 ```
 
-This class loads the MongoDB connection details from the `mongodb.properties` file.
-
-2. `Employee.java`:
+2. `Employee.java`：定义员工数据模型
 
 ```java title="Employee.java"
 package com.example;
@@ -216,9 +214,7 @@ public class Employee {
 }
 ```
 
-This class represents an Employee document in MongoDB.
-
-3. `App.java`:
+3. `App.java`：主程序类，演示 MongoDB 基本操作
 
 ```java title="App.java"
 package com.example;
@@ -266,42 +262,43 @@ public class App {
 }
 ```
 
-This is the main class that demonstrates basic MongoDB operations using the Java driver:
-   - It connects to the MongoDB database.
-   - It inserts a new employee document.
-   - It finds and prints all employee documents.
-   - It updates an employee's position.
-   - It deletes an employee document.
+主程序类展示了以下 MongoDB 基本操作：
+
+- 连接 MongoDB 数据库
+- 插入员工文档
+- 查询并显示所有员工信息
+- 更新员工职位
+- 删除员工记录
 
 </div>
 
-## Build and Run
+## 构建和运行
 
-To build and run the project, use the following commands in your terminal:
+执行以下命令来构建并运行项目：
 
 ```bash
 mvn clean package
 java -jar target/mongodb-java-example-1.0-SNAPSHOT.jar
 ```
 
-If everything is set up correctly, you should see output demonstrating the MongoDB operations.
+如果配置正确，您将看到一系列 MongoDB 操作的执行结果。
 
-## Best Practices
+## 最佳实践
 
-1. Use a properties file to store MongoDB connection details.
-2. Implement a configuration class to load and provide access to MongoDB properties.
-3. Use the try-with-resources statement to ensure that the MongoClient is properly closed.
-4. Handle exceptions appropriately and provide meaningful error messages.
-5. Use Maven for dependency management and build automation.
+1. 将 MongoDB 连接信息统一存储在配置文件中，便于管理和修改
+2. 创建专门的配置类来管理 MongoDB 连接参数
+3. 使用 try-with-resources 语句确保 MongoClient 资源的自动释放
+4. 合理处理异常情况，提供清晰的错误提示信息
+5. 使用 Maven 进行项目依赖管理和构建自动化
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请按以下步骤进行排查：
 
-1. Verify your MongoDB credentials in the `mongodb.properties` file.
-2. Ensure your MongoDB database is running and accessible from your Devbox environment.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the MongoDB Java driver dependency is correctly specified in your `pom.xml` file.
-5. Make sure you're using the correct version of Java (11 in this example).
+1. 检查 `mongodb.properties` 文件中的连接信息是否正确
+2. 确认 MongoDB 数据库服务是否正常运行，且可以从 Devbox 环境访问
+3. 检查 Devbox 环境的网络设置是否有访问限制
+4. 验证 `pom.xml` 中的 MongoDB Java 驱动依赖配置是否正确
+5. 确保使用的 Java 版本符合要求 (本示例使用 OpenJDK 17)
 
-For more detailed information on using MongoDB with Java, refer to the [MongoDB Java Driver documentation](https://mongodb.github.io/mongo-java-driver/).
+如需了解更多 Java 操作 MongoDB 的详细信息，请参考 [MongoDB Java 驱动官方文档](https://mongodb.github.io/mongo-java-driver/)。

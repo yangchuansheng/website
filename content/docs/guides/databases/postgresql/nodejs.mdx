@@ -1,36 +1,36 @@
 ---
 title: Node.js
-description: Learn how to connect to PostgreSQL databases in Sailos Devbox using Node.js
+description: 在 Sealos Devbox 中使用 Node.js 操作 PostgreSQL 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a PostgreSQL database using Node.js within your Sailos Devbox project.
+本教程将为您详细介绍如何在 Sealos Devbox 开发环境中使用 Node.js 连接和操作 PostgreSQL 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Node.js environment
-- [A PostgreSQL database created using the Database app in Sailos](./)
+- [已配置 Node.js 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [通过 Sealos 数据库应用创建的 PostgreSQL 数据库实例](./)
 
-## Install Required Packages
+## 安装依赖
 
-In your Cursor terminal, install the necessary packages:
+在 Cursor 终端中运行以下命令安装所需的依赖包：
 
 ```bash
 npm install pg dotenv
 ```
 
-This command installs:
-- `pg`: The PostgreSQL client for Node.js
-- `dotenv`: A zero-dependency module that loads environment variables from a `.env` file
+这将安装两个核心包：
+- `pg`：Node.js 的 PostgreSQL 客户端，提供数据库连接和操作功能
+- `dotenv`：用于从 `.env` 文件中加载环境变量的工具包
 
-## Connection Setup
+## 配置数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment and create a client
+#### 初始化数据库客户端
 
-First, we'll import the required modules and set up the database configuration:
+首先，引入必要的模块并配置数据库连接参数：
 
-````javascript
+```javascript
 const { Client } = require('pg');
 require('dotenv').config();
 
@@ -43,13 +43,13 @@ const dbConfig = {
 };
 
 const client = new Client(dbConfig);
-````
+```
 
-#### Create connection and query functions
+#### 实现数据库连接和查询方法
 
-Next, we'll create functions to handle database connection and query execution:
+接下来，创建用于管理数据库连接和执行查询的核心方法：
 
-````javascript
+```javascript
 async function connectToDatabase() {
   try {
     await client.connect();
@@ -78,13 +78,13 @@ async function closeDatabaseConnection() {
     console.error('Error closing connection', err);
   }
 }
-````
+```
 
-#### Implement database operations
+#### 编写数据库操作方法
 
-Now, let's implement functions for various database operations:
+现在，让我们实现具体的数据库操作方法：
 
-````javascript
+```javascript
 async function createTable() {
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS employees (
@@ -116,13 +116,13 @@ async function getAllEmployees() {
   const employees = await executeQuery(selectQuery);
   console.log('All employees:', employees);
 }
-````
+```
 
-#### Create a main function to run operations
+#### 编写主函数测试功能
 
-Finally, let's create a main function to demonstrate all the operations:
+最后，创建一个主函数来演示所有操作：
 
-````javascript
+```javascript
 async function main() {
   try {
     await connectToDatabase();
@@ -139,11 +139,13 @@ async function main() {
 }
 
 main();
-````
+```
 
 </div>
 
-Here’s the complete code to connect to the Postgres database with Node.js:
+## 完整代码示例
+
+以下是完整的 Node.js PostgreSQL 数据库操作代码：
 
 ```javascript title="test-connection.js"
 const { Client } = require('pg');
@@ -187,6 +189,7 @@ async function closeDatabaseConnection() {
     console.error('Error closing connection', err);
   }
 }
+
 async function createTable() {
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS employees (
@@ -237,43 +240,43 @@ async function main() {
 main();
 ```
 
-## Usage
+## 运行程序
 
-Before running the script, create a `.env` file in the same directory with the following content:
+在运行脚本之前，需要在项目根目录创建 `.env` 文件，内容如下：
 
-````ini title=".env"
+```ini title=".env"
 DB_USER=your_username
 DB_PASSWORD=your_password
 DB_HOST=your_database_host
 DB_PORT=5432
 DB_NAME=your_database_name
-````
+```
 
-Replace the placeholders with your actual PostgreSQL credentials from the Database app in Sailos.
+请将示例中的占位符替换为您在 Sealos 数据库应用中获取的实际 PostgreSQL 连接信息。
 
-To test the connection, run the test script:
+运行测试脚本：
 
 ```bash
 node test-connection.js
 ```
 
-This will execute all the operations defined in the `main` function, demonstrating the connection to the database, table creation, data insertion, updating, and querying.
+执行后，脚本将运行 `main` 函数中的所有操作，依次演示数据库连接、表创建、数据插入、更新和查询等功能。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for database credentials.
-2. Always handle potential errors using try-catch blocks.
-3. Close the database connection after operations are complete.
-4. Use parameterized queries to prevent SQL injection.
-5. Consider using connection pooling for better performance in production environments.
+1. 使用环境变量管理数据库连接信息，避免硬编码
+2. 确保所有数据库操作都包含适当的错误处理机制
+3. 及时关闭不再使用的数据库连接
+4. 使用参数化查询防止 SQL 注入攻击
+5. 在生产环境中建议使用连接池来提升性能
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查以下几点：
 
-1. Verify your database credentials in the `.env` file.
-2. Ensure your PostgreSQL database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the `pg` package is correctly installed.
+1. 确认 `.env` 文件中的数据库连接信息是否正确
+2. 验证 PostgreSQL 数据库服务是否正常运行且可访问
+3. 检查 Devbox 环境的网络设置是否有限制
+4. 确保已正确安装 `pg` 包
 
-For more detailed information on using PostgreSQL with Node.js, refer to the [node-postgres documentation](https://node-postgres.com/).
+更多关于 Node.js 操作 PostgreSQL 的详细信息，请参考 [node-postgres 官方文档](https://node-postgres.com/)。

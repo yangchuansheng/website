@@ -1,48 +1,51 @@
 ---
 title: Rust
-description: Learn how to connect to PostgreSQL databases in Sailos Devbox using Rust
+description: 在 Sealos Devbox 中使用 Rust 连接 PostgreSQL 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a PostgreSQL database using Rust within your Sailos Devbox project.
+本教程将指导你如何在 Sealos Devbox 项目中使用 Rust 语言连接和操作 PostgreSQL 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Rust environment
-- [A PostgreSQL database created using the Database app in Sailos](./)
+在开始之前，请确保你已经：
 
-## Install Required Dependencies
+- [创建并配置了一个带有 Rust 运行环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [在 Sealos 数据库应用中创建了 PostgreSQL 数据库实例](./)
 
-In your Cursor terminal, add the necessary dependencies to your `Cargo.toml` file:
+## 安装依赖
 
-```toml
+在项目的 `Cargo.toml` 文件中，需要添加以下依赖项：
+
+```toml title="Cargo.toml"
 [dependencies]
 tokio = { version = "1.28", features = ["full"] }
 sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres"] }
 dotenv = "0.15"
 ```
 
-These dependencies include:
-- `tokio`: An asynchronous runtime for Rust
-- `sqlx`: A database toolkit for Rust with async support
-- `dotenv`: A library for loading environment variables from a file
+主要依赖包括：
 
-## Connection Setup
+- `tokio`：Rust 的异步运行时环境
+- `sqlx`：异步数据库操作工具包
+- `dotenv`：环境变量配置管理工具
+
+## 配置数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 设置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录创建 `.env` 文件，配置数据库连接信息：
 
 ```ini title=".env"
 DATABASE_URL=postgres://your_username:your_password@your_database_host:5432/your_database_name
 ```
 
-Replace the placeholders with your actual PostgreSQL credentials from the Database app in Sailos.
+注意：请使用从 Sealos 桌面数据库应用中获取的实际 PostgreSQL 连接信息替换上述占位符。
 
-#### Create the main.rs file
+#### 编写主程序代码
 
-Create a new file named `src/main.rs` with the following content:
+创建 `src/main.rs` 文件，实现数据库操作逻辑：
 
 ```rust title="src/main.rs"
 use sqlx::postgres::PgPoolOptions;
@@ -118,49 +121,43 @@ async fn main() -> Result<(), sqlx::Error> {
 }
 ```
 
-Let's break down the main components of this code:
+代码的主要组成部分：
 
-1. **Imports**: We import necessary modules from `sqlx`, `dotenv`, and `std::env`.
-
-2. **Main function**: The `main` function is marked with `#[tokio::main]` to use Tokio's async runtime.
-
-3. **Environment setup**: We load environment variables from the `.env` file and retrieve the database URL.
-
-4. **Connection pool**: We create a connection pool using `PgPoolOptions`.
-
-5. **Table creation**: We create the `employees` table if it doesn't exist.
-
-6. **Data insertion**: We insert a sample employee into the database.
-
-7. **Data querying**: We query and display all employees in the database.
+1. **引入依赖**：导入 `sqlx`、`dotenv` 和 `std::env` 等必要模块。
+2. **配置主函数**：使用 `#[tokio::main]` 标注启用异步运行时。
+3. **加载配置**：读取 `.env` 文件中的数据库连接参数。
+4. **创建连接池**：通过 `PgPoolOptions` 实现数据库连接池管理。
+5. **初始化数据表**：创建示例表结构 (如果不存在)。
+6. **数据操作示例**：演示基本的数据插入操作。
+7. **查询数据**：展示如何查询并显示数据记录。
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+在终端中执行以下命令运行程序：
 
 ```bash
 cargo run
 ```
 
-This will compile and execute the `main` function, demonstrating the connection to the database, table creation, data insertion, and querying.
+该命令将编译并执行示例程序，展示完整的数据库操作流程。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for database credentials.
-2. Use connection pooling for better performance and resource management.
-3. Use prepared statements (as demonstrated with `sqlx::query`) to prevent SQL injection.
-4. Handle errors appropriately using Rust's `Result` type.
-5. Use async/await for efficient database operations.
+1. 妥善管理数据库凭据，使用环境变量存储敏感信息。
+2. 使用连接池优化数据库连接性能和资源利用。
+3. 采用预处理语句 (如示例中的 `sqlx::query`) 防止 SQL 注入风险。
+4. 充分利用 Rust 的 `Result` 类型进行错误处理。
+5. 合理使用 async/await 提升异步操作效率。
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查以下几点：
 
-1. Verify your database credentials in the `.env` file.
-2. Ensure your PostgreSQL database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that all required dependencies are correctly specified in your `Cargo.toml` file.
+1. 确认 `.env` 文件中的数据库连接信息是否正确。
+2. 验证 PostgreSQL 数据库服务是否正常运行且可访问。
+3. 检查 Devbox 环境的网络连接状态。
+4. 确保 `Cargo.toml` 中的依赖配置完整且正确。
 
-For more detailed information on using PostgreSQL with Rust, refer to the [sqlx documentation](https://github.com/launchbadge/sqlx).
+更多关于 Rust 操作 PostgreSQL 的详细信息，请参考 [sqlx 官方文档](https://github.com/launchbadge/sqlx)。

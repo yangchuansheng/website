@@ -9,6 +9,7 @@ import {
 } from 'fumadocs-ui/page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 export default async function Page({
   params,
@@ -34,6 +35,8 @@ export default async function Page({
         <MDX
           components={{
             ...defaultMdxComponents,
+            Tabs,
+            Tab,
             img: (props) => (
               <ImageZoom {...(props as any)} className="rounded-xl" />
             ),

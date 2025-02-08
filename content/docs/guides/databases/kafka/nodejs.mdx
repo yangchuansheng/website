@@ -1,34 +1,34 @@
 ---
 title: Node.js
-description: Learn how to connect to Kafka in Sailos Devbox using Node.js
+description: 在 Sealos Devbox 中使用 Node.js 连接 Kafka 的完整指南
 ---
 
-This guide will walk you through the process of connecting to Kafka using Node.js within your Sailos Devbox project.
+本文将指导您如何在 Sealos Devbox 中使用 Node.js 连接和操作 Kafka。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Node.js environment
-- [A Kafka cluster created using the Database app in Sailos](./)
+- [已创建并配置好 Node.js 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用创建 Kafka 集群](./)
 
-## Install Required Packages
+## 安装依赖包
 
-In your Cursor terminal, install the necessary packages:
+在运行环境终端中执行以下命令安装所需依赖：
 
 ```bash
 npm install kafkajs dotenv
 ```
 
-This command installs:
-- `kafkajs`: A modern Apache Kafka client for Node.js
-- `dotenv`: A zero-dependency module that loads environment variables from a `.env` file
+该命令将安装以下包：
+- `kafkajs`：一个现代化的 Node.js Kafka 客户端
+- `dotenv`：用于从 `.env` 文件加载环境变量的模块
 
-## Connection Setup
+## 配置与实现
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-First, let's set up the environment variables for our Kafka connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录创建 `.env` 文件，添加 Kafka 连接所需的环境变量：
 
 ```ini title=".env"
 KAFKA_BROKERS=your_kafka_host:9092
@@ -36,11 +36,11 @@ KAFKA_CLIENT_ID=my-app
 KAFKA_TOPIC=my-topic
 ```
 
-Replace the placeholders with your actual Kafka broker address, client ID, and topic name from the Database app in Sailos.
+请将上述配置中的占位符替换为您从 Sealos 数据库应用中获取的实际 Kafka 连接信息。
 
-#### Create a Kafka client
+#### 创建 Kafka 客户端
 
-Create a new file named `kafkaClient.js` with the following content:
+新建 `kafkaClient.js` 文件，添加以下代码：
 
 ```javascript
 const { Kafka } = require('kafkajs');
@@ -57,11 +57,11 @@ const consumer = kafka.consumer({ groupId: 'test-group' });
 module.exports = { kafka, producer, consumer };
 ```
 
-This file creates a Kafka client and exports it along with a producer and consumer.
+该文件创建并导出 Kafka 客户端实例及其生产者和消费者。
 
-#### Create a producer script
+#### 实现消息生产者
 
-Now, let's create a file named `producer.js` to demonstrate how to produce messages:
+创建 `producer.js` 文件，实现消息发送功能：
 
 ```javascript
 const { kafka, producer } = require('./kafkaClient');
@@ -110,19 +110,17 @@ async function produceMessage() {
 produceMessage();
 ```
 
-This script does the following:
+生产者脚本的主要功能：
 
-1. Connects to Kafka using the producer.
-2. Checks if the specified topic exists, creating it if necessary.
-3. Sends a message to the topic.
-4. Handles errors, including connection issues.
-5. Disconnects from Kafka after the operation.
+1. 连接 Kafka 服务
+2. 检查并创建主题 (如不存在)
+3. 发送消息
+4. 错误处理和日志记录
+5. 完成后断开连接
 
-This approach ensures the topic exists before sending messages and provides detailed error information if the connection fails.
+#### 实现消息消费者
 
-#### Create a consumer script
-
-Create another file named `consumer.js` to demonstrate how to consume messages:
+创建 `consumer.js` 文件，实现消息接收功能：
 
 ```javascript
 const { consumer } = require('./kafkaClient');
@@ -151,49 +149,46 @@ async function consumeMessages() {
 consumeMessages();
 ```
 
-This consumer script:
-
-1. Connects to Kafka using the consumer instance.
-2. Subscribes to the specified topic, starting from the beginning of the log.
-3. Continuously runs and processes each incoming message.
-4. Logs the topic, partition, offset, and message value for each received message.
-5. Handles any errors that occur during the consumption process.
-
-This setup allows for real-time processing of messages as they arrive in the Kafka topic.
+消费者脚本的主要功能：
+1。连接 Kafka 服务
+2。订阅指定主题
+3。持续监听并处理新消息
+4。记录接收到的消息详情
+5。错误处理
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the producer script, use the following command in your Cursor terminal:
+在运行环境终端中，执行以下命令启动生产者：
 
 ```bash
 node producer.js
 ```
 
-To run the consumer script, open another terminal and use:
+打开新的终端窗口，运行消费者：
 
 ```bash
 node consumer.js
 ```
 
-The consumer will start listening for messages. When you run the producer script, you should see the message being received by the consumer.
+此时消费者将开始监听消息。当生产者发送消息后，您可以在消费者终端中看到接收到的消息内容。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for Kafka configuration details.
-2. Implement proper error handling and logging.
-3. Use the `kafkajs` built-in retry mechanism for better reliability.
-4. Consider implementing a graceful shutdown mechanism for your consumer.
-5. Use compression for better performance when dealing with large messages or high throughput.
+1. 使用环境变量管理 Kafka 配置信息
+2. 实现完善的错误处理和日志记录机制
+3. 充分利用 `kafkajs` 提供的重试机制
+4. 为消费者实现优雅的关闭处理
+5. 在处理大量消息时考虑使用压缩以提升性能
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查：
 
-1. Verify your Kafka broker address in the `.env` file.
-2. Ensure your Kafka cluster is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the required packages are correctly installed.
+1. `.env` 文件中的 Kafka 连接信息是否正确
+2. Kafka 集群是否正常运行且可访问
+3. 运行环境的网络配置是否有限制
+4. 相关依赖包是否正确安装
 
-For more detailed information on using Kafka with Node.js, refer to the [KafkaJS documentation](https://kafka.js.org/).
+要了解更多关于在 Node.js 中使用 Kafka 的信息，请参考 [KafkaJS 官方文档](https://kafka.js.org/)。

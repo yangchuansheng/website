@@ -1,178 +1,198 @@
 ---
-title: Quick Start Tutorial
+title: 快速开始
 icon: Album
-keywords: [Sailos DevBox, Next.js, cloud development, Kubernetes, OCI image, Cursor IDE, remote development, cloud deployment, containerization, DevOps]
-description: Learn how to create, develop, and deploy a Next.js app using Sailos DevBox. This guide covers project setup, remote development with Cursor IDE, and cloud deployment.
+keywords: [Sealos Devbox, Next.js, 云开发, Kubernetes, OCI 镜像, Cursor IDE, 远程开发, 云部署, 容器化, DevOps]
+description: 本指南介绍如何使用 Sealos Devbox 来创建、开发和部署 Next.js 应用，内容包括项目设置、Cursor IDE 远程开发以及云端部署。
 ---
 
-Sailos DevBox is an all-in-one platform designed for integrated online development, testing, and production. It offers a seamless solution for creating environments and database dependencies with just a single click, allows developers to work locally using their preferred IDEs while streamlining setup processes and enabling automatic application deployment.
+[Sealos Devbox](https://sealos.run/devbox) 是一个一站式云开发平台，集**本地开发、线上测试、打包上线**为一体。通过简单的点击操作，即可快速创建所需的环境和数据库依赖。开发者可以使用熟悉的本地 IDE 进行开发，同时享受简化的环境配置流程和自动化的应用部署体验。
 
-**In this guide We'll demonstrate how to how to create a minimal Next.js demo project with Sailos Devbox.**
+**本指南将带你使用 Sealos Devbox 创建一个基础的 Next.js 示例项目。**
 
-## Create a Devbox Project
+## 创建 Devbox 项目
 
-<div className='steps [&_h5]:step'>
+<div className='steps [&_h4]:step'>
 
-<h5>Click on the "Devbox" icon on [Sailos Desktop](https://usw.sailos.io), then click on the "Create New Project" button to create a new project.</h5>
-<h5>In the "Runtime" section, choose "Next.js" as the development framework. Use the sliders to set the CPU cores and memory for the project.</h5>
-   ![](./images/devbox-nextjs-framework.png)
+<h4>选择开发框架</h4>
 
-<h5>After setting up the basic environment, you'll need to configure the network settings for your project:</h5>
+访问 [Sealos Cloud](https://cloud.sealos.run)，点击 `Devbox` 图标，然后点击 "新建项目" 按钮。在 "运行环境" 配置中，选择 `Next.js` 作为开发框架，并通过滑块调整项目所需的 CPU 核心数和内存大小。
 
-   ![](./images/devbox-nextjs-network.png)
+![Sealos Devbox 创建 Next.js 项目界面，显示框架选择和资源配置选项](./images/devbox-nextjs-framework.png)
 
-    - Scroll down to the "Network" section of the configuration page.
-    
-    - Container Port: 
-      - Enter "3000" in the Container Port field. This is the default port that Next.js uses for development.
-      - If you need additional ports, click the "Add Port" button and specify them.
-    
-    - Enable Internet Access:
-      - Toggle the switch to enable internet access for your Devbox. This allows external users to access your Next.js application through the public internet using the provided domain.
-    
-    - Domain:
-      - By default, Sailos provides a subdomain for your application.
-      - If you want to use a custom domain, click on "Custom Domain" and follow the instructions to set it up.
-    
-   Remember that the container port (3000) should match the port your Next.js application is configured to run on. If you change the port in your Next.js configuration, make sure to update it here as well.
+<h4>配置网络设置</h4>
 
-<h5>Click on the "Create" button to create your project.</h5>
+![Sealos Devbox 网络配置界面，展示端口设置和域名配置选项](./images/devbox-nextjs-network.png)
+
+- 滚动到配置页面的 "网络配置" 部分。
+
+- 配置容器端口：
+  - 输入 `3000` (Next.js 的默认开发端口)
+  - 如需添加其他端口，可点击 "添加端口" 按钮
+
+- 配置外部访问：
+  - 开启公网访问开关，允许外部用户通过域名访问应用。
+
+- 域名配置：
+  - 系统会自动为应用分配一个子域名。
+  - 如需使用自定义域名，可点击 "自定义域名" 并按提示设置。
+
+注意：请确保容器端口 (3000) 与 Next.js 应用的运行端口一致。如果在 Next.js 配置中修改了端口，这里也需要相应更新。
+
+<h4>创建项目</h4>
+
+点击 "创建" 按钮完成项目创建。
 
 </div>
 
-## Connect with Cursor IDE
+## 连接开发环境
 
-After creating your project, you'll see it listed in the Devbox List. Each project has an "Operation" column with various options.
+项目创建完成后，你可以在项目列表中看到新建的项目。每个项目的 "操作" 栏都提供了多个便捷选项。
 
-![](./images/devbox-list-operation.png)
+![Sealos Devbox 项目列表操作界面，展示包含 Cursor IDE 和 VSCode 等开发工具选项](./images/devbox-list-operation.png)
 
-<div className='steps [&_h5]:step'>
+<div className='steps [&_h4]:step'>
 
-<h5>To connect to your project's Devbox runtime using Cursor IDE:</h5>
-    - Locate your project in the Devbox List.
-    - In the "Operation" column, click on the dropdown arrow next to the VSCode icon.
-    - From the dropdown menu, select "Cursor".
-    - Click on the "Cursor" option that appears.
+<h4>连接 Cursor IDE</h4>
 
-<h5>When you click on "Cursor", it will launch the Cursor IDE application on your local machine. Within Cursor, a popup window will appear, prompting you to install the Devbox plugin for Cursor. This plugin enables SSH remote connection to the Devbox runtime.</h5>
-    - Follow the instructions in the Cursor popup to install the Devbox plugin.
-    - Once installed, Cursor will establish a remote connection to your Devbox runtime.
+- 在项目列表中找到你的项目。
+- 在 "操作" 列中，点击 VSCode 图标旁的下拉箭头。
+- 从下拉菜单中选择 `Cursor`。
+- 点击出现的 `Cursor` 选项。
+
+<h4>安装插件</h4>
+
+- 选择 `Cursor` 后，系统会自动启动本地的 Cursor IDE。
+- Cursor 会弹出提示窗口，引导你安装 Devbox 插件。
+- 该插件能让你通过 SSH 安全地连接到 Devbox 开发环境。
+- 按照提示完成插件安装，Cursor 将自动建立远程连接。
 
 </div>
 
 <Callout type="info">
-  You can switch between different IDE options (VSCode, Cursor, or VSCode Insiders) at any time by using the dropdown menu in the "Operation" column.
+你可以随时通过"操作"列的下拉菜单切换使用不同的开发工具（VSCode、Cursor 或 VSCode Insiders）。
 </Callout>
 
-## Develop
+## 开发调试
 
-<div className='steps [&_h5]:step'>
+<div className='steps [&_h4]:step'>
 
-<h5>After the connection is established, you'll be able to access and edit your project files directly within the Cursor IDE environment.</h5>
+<h4>访问项目文件</h4>
 
-    ![](./images/cursor-remote-devbox.png)
+![Cursor IDE 远程开发界面，展示连接到 Sealos Devbox 的项目文件结构](./images/cursor-remote-devbox.png)
 
-   This remote connection allows you to develop your Next.js application using Cursor IDE, with all the benefits of a cloud-based development environment:
-    - Your code runs in the Devbox runtime, ensuring consistency across development and production environments.
-    - You can access your project from anywhere, on any device with Cursor installed.
-    - Collaboration becomes easier as team members can connect to the same Devbox runtime.
+通过远程连接，你可以在 Cursor IDE 中开发 Next.js 应用，同时获得以下优势：
+- 代码在 Devbox 环境中运行，确保开发和生产环境的一致性。
+- 只需安装 Cursor，即可在任何设备上访问你的项目。
+- 团队成员可以连接到同一个开发环境，实现便捷协作。
 
-<h5>You can start debugging your Next.js application:</h5>
-   - Open the terminal within Cursor IDE.
-   - Navigate to your project directory if you're not already there.
-   - Run the following command to start the Next.js development server:
-     ```bash
-     npm run dev
-     ```
-   - This command will start your Next.js application in development mode.
+<h4>启动开发服务器</h4>
 
-<h5>To access your running application:</h5>
-    - Return to the Sailos Devbox List in your browser.
-    - Find the project you just created.
-    - Click on the "Detail" button on the right side of your project's row.
+- 在 Cursor IDE 中打开终端。
+- 确保当前位于项目目录下。
+- 运行以下命令启动 Next.js 开发服务器：
+ ```bash
+ npm run dev
+ ```
+- 该命令会在开发模式下启动应用。
 
-<h5>In the project details page:</h5>
-    - Look for the "Network" section.
-    - You'll see an "External Address" field.
-    - Click on this external address.
-   ![](./images/devbox-nextjs-external-address.png)
+<h4>访问应用</h4>
 
-<h5>This will open your Next.js application in a new browser tab, allowing you to view and interact with your running service.</h5>
+- 切换到 Cursor 面板的 "Network" 标签页。
+- 点击地址栏右侧的 🌐 按钮。
+   ![Sealos Devbox 网络面板中的应用访问按钮界面](./images/devbox-nextjs-network-open.png)
+- 在弹窗中选择 "Open"，即可在浏览器中打开并测试运行中的应用。
 
-    ![](./images/devbox-nextjs-demo.jpeg)
+  ![运行在 Sealos Devbox 上的 Next.js 示例应用预览界面](./images/devbox-nextjs-demo.jpg)
 
 </div>
 
-## Release
+## 发布应用
 
-After you've developed and tested your Next.js application, you can release it as an OCI (Open Container Initiative) image. This allows you to version your application and prepare it for deployment.
+完成 Next.js 应用的开发和测试后，你可以将其打包为 [OCI (Open Container Initiative)](https://opencontainers.org/) 镜像。这样不仅可以为应用添加版本控制，还能为后续部署做好准备。
 
-1. In the Cursor IDE terminal, navigate to your project directory and run the build command:
-   ```bash
-   npm run build
-   ```
-   This command creates a production-ready build of your Next.js application in the '.next' directory.
+<div className='steps [&_h4]:step'>
 
-2. Navigate to your project's details page:
-   - Go to the Sailos Devbox List in your browser.
-   - Find your project and click on the "Detail" button on the right side of your project's row.
+<h4>构建应用</h4>
 
-3. On the project details page, look for the "Version" section.
+- 在 Cursor IDE 终端中，确保位于项目目录下。
+- 运行构建命令：
+```bash
+npm run build
+```
+该命令会在 `.next` 目录下生成可用于生产环境的应用版本。
 
-4. Click on the "Release" button located in the top right corner of the "Version" section.
+<h4>开始发布</h4>
 
-5. A "Release" dialog box will appear. Here, you need to provide the following information:
-   - Image Name: This field is pre-filled with your project's image name.
-   - Tag: Enter a version tag for your release (e.g., v1.0).
-   - Description: Provide a brief description of this release (e.g., "Initial release" or "Bug fixes for login feature").
+- 打开 Sealos Devbox 项目列表。
+- 找到你的项目并点击 "详情" 按钮。
+- 在项目详情页面，找到 "版本历史" 区域。
+- 点击右上角的 "发布版本" 按钮。
 
-   ![](./images/devbox-release-oci-image.png)
+<h4>填写发布信息</h4>
 
-6. After filling in the required information, click the "Release" button at the bottom of the dialog box.
+在弹出的 "发布版本" 对话框中填写：
+- 镜像名称：系统已预填入项目镜像名称。
+- 版本号：输入版本号 (如：`v1.0`)。
+- 版本描述：简要说明本次发布内容 (如："首次发布" 或 "修复登录功能")。
 
-7. The system will process your release. Once completed, you'll see a new entry in the "Version" section of your project details page, showing the tag, status, creation time, and description of your release.
+![Sealos Devbox OCI 镜像发布界面，包含版本和描述信息填写选项](./images/devbox-release-oci-image.png)
 
-    ![](./images/devbox-release-version-lists.png)
+<h4>完成发布</h4>
 
-By following these steps, you've successfully created an OCI image of your Next.js application. This image can now be used for deployment or shared with other team members. Each release creates a snapshot of your current code, allowing you to maintain different versions of your application and easily roll back if needed.
+- 检查填写的信息无误后，点击 "发版" 按钮。
+- 系统会开始处理发布请求。
+- 完成后，新版本将出现在 "版本历史" 列表中，显示版本号、状态、创建时间和描述。
 
-<Callout type="info">
-  Remember to create new releases whenever you make significant changes or reach important milestones in your project. This practice helps in maintaining a clear history of your application's development and facilitates easier deployment and collaboration.
-</Callout>
+![Sealos Devbox 版本列表界面，显示已发布的应用版本信息](./images/devbox-release-version-lists.png)
 
-## Deploy
+</div>
 
-After releasing your Next.js application as an OCI image, you can deploy it to Sailos Cloud for production use. Here's how to do it:
-
-1. In your project's details page, locate the "Version" section.
-
-2. Find the release you want to deploy and click the "Deploy" button in the "Operation" column.
-
-3. This will redirect you to the App Launchpad application within Sailos.
-
-4. In the App Launchpad application, follow the deployment wizard to configure your application settings. This may include:
-    - Selecting the appropriate environment
-    - Setting resource limits (CPU, memory)
-    - Configuring environment variables if needed
-    - Setting up any required volumes or persistent storage
-
-   ![](./images/devbox-release-deploy.png)
-
-5. Once you've configured all necessary settings, click the "Deploy Application" button in the top right corner to start the deployment process.
-
-6. You'll be taken to the application details view within App Launchpad.
-
-7. Once the status is "Running", Click on the address provided under "Public Address". This will open your deployed Next.js application in a new browser tab.
-
-   ![](./images/devbox-release-deploy-success.png)
-
-By following these steps, you've successfully deployed your Next.js application to Sailos Cloud using the App Launchpad application. Your application is now accessible via the public address, allowing users to interact with it from anywhere on the internet.
+至此，你已经成功将 Next.js 应用打包为 OCI 镜像。这个镜像可用于部署或与团队成员共享。每次发布都会创建当前代码的快照，方便你管理不同版本，必要时还可以快速回退。
 
 <Callout type="info">
-  You can always update your application by creating a new release in Devbox and repeating this deployment process with the new version using App Launchpad.
+建议在项目有重要更新或达到里程碑时创建新版本。这样可以清晰记录应用开发历程，也能让部署和协作更加便捷。
 </Callout>
 
-This workflow allows you to develop and debug your Next.js application in a cloud environment while still using your preferred local IDE. The external address makes it easy to share your work with team members or clients, as they can access your running application from anywhere with an internet connection.
+## 部署应用
 
+将应用打包为 OCI 镜像后，你可以通过 Sealos Cloud 部署到生产环境。具体步骤如下：
 
+<div className='steps [&_h4]:step'>
 
+<h4>进入部署流程</h4>
+
+- 在项目详情页面的 "版本历史" 区域中。
+- 找到要部署的版本。
+- 点击 "操作" 栏中的 "上线" 按钮。
+- 系统会自动跳转到 Sealos 的【应用管理】。
+
+<h4>设置部署参数</h4>
+
+在【应用管理】中，按照部署向导设置：
+- 选择合适的运行环境。
+- 设置 CPU、内存等资源限制。
+- 配置必要的环境变量。
+- 根据需要设置存储卷。
+
+![Sealos Devbox 应用部署配置界面，展示资源和环境设置选项](./images/devbox-release-deploy.png)
+
+<h4>部署应用</h4>
+
+- 点击右上角的 "部署应用" 按钮。
+- 页面将跳转至应用详情页面。
+- 当状态显示为 "running" 时，表示部署成功。
+- 点击 "公网地址" 下的访问地址，即可在浏览器中打开已部署的应用。
+
+![Sealos Devbox 应用部署成功界面，显示运行状态和访问地址](./images/devbox-release-deploy-success.png)
+
+</div>
+
+完成以上步骤后，你的 Next.js 应用就已经成功部署到 Sealos Cloud 平台，可以通过公网访问了。
+
+<Callout type="info">
+需要更新应用时，你可以随时在 Devbox 中发布新版本，在弹出的窗口中，你可以选择更新已部署的应用，也可以选择创建新应用。
+
+![Sealos Devbox 更新应用](./images/devbox-release-deploy-update.png)
+</Callout>
+
+通过这套完整的工作流程，你可以在云环境中便捷地开发和调试 Next.js 应用，同时继续使用习惯的本地开发工具。借助外部访问地址，你可以轻松地向团队成员或客户展示项目进展。只要能连接互联网，他们就能随时访问你的应用。

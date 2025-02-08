@@ -1,54 +1,56 @@
 ---
 title: Python
-description: Learn how to connect to MongoDB databases in Sailos Devbox using Python
+description: 在 Sealos Devbox 中使用 Python 连接 MongoDB 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a MongoDB database using Python within your Sailos Devbox project.
+本教程将指导您如何在 Sealos Devbox 项目中使用 Python 连接和操作 MongoDB 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Python environment
-- [A MongoDB database created using the Database app in Sailos](./)
+- [已创建并配置好 Python 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已在 Sealos 数据库应用中创建 MongoDB 数据库](./)
 
-## Activating the Python Environment
+## 配置开发环境
 
-Before you start, you need to activate the Python virtual environment in your Devbox. Open the terminal within Cursor IDE and run:
+### 激活 Python 环境
+
+首先需要在 Devbox 开发环境中激活 Python 虚拟环境。在 Cursor IDE 的终端中运行以下命令：
 
 ```bash
 source ./bin/activate
 ```
 
-You should see your prompt change, indicating that the virtual environment is now active.
+当您看到命令提示符发生变化时，说明虚拟环境已成功激活。
 
-## Installing Required Packages
+### 安装依赖包
 
-In your Cursor terminal, install the necessary packages:
+在终端中运行以下命令安装所需的依赖包：
 
 ```bash
 pip install pymongo python-dotenv
 ```
 
-This command installs:
-- `pymongo`: The official MongoDB driver for Python
-- `python-dotenv`: A Python package that allows you to load environment variables from a .env file
+这将安装：
+- `pymongo`：MongoDB 官方提供的 Python 驱动程序
+- `python-dotenv`：用于从。env 文件加载环境变量的工具包
 
-## Connection Setup
+## 实现数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-First, let's set up the environment variables for our database connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录创建 `.env` 文件来存储数据库连接信息：
 
 ```ini title=".env"
 MONGO_URI=mongodb://your_username:your_password@your_database_host:27017/your_database_name?authSource=admin
 ```
 
-Replace the placeholders with your actual MongoDB credentials from the Database app in Sailos.
+请将占位符替换为您从 Sealos 数据库应用获取的实际 MongoDB 连接信息。
 
-#### Create a database connection module
+#### 创建数据库连接模块
 
-Create a new file named `db_connection.py` with the following content:
+新建 `db_connection.py` 文件，实现数据库连接功能：
 
 ```python title="db_connection.py"
 import os
@@ -76,15 +78,14 @@ def close_connection(client):
         print("MongoDB connection closed")
 ```
 
-This module provides two main functions:
+该模块提供两个核心功能：
 
-1. `get_db_connection()`: This function establishes a connection to the MongoDB database using the credentials stored in the environment variables. It returns the client object if successful, or None if an error occurs.
+1. `get_db_connection()`：使用环境变量中的连接信息建立 MongoDB 连接。连接成功返回客户端对象，失败则返回 None。
+2. `close_connection(client)`：用于在操作完成后关闭数据库连接。
 
-2. `close_connection(client)`: This function closes the database connection when it's no longer needed.
+#### 编写测试脚本
 
-#### Create a test script
-
-Now, let's create a test script to verify our connection and perform some basic database operations. Create a file named `test_mongodb.py` with the following content:
+创建 `test_mongodb.py` 文件来测试数据库连接和基本操作：
 
 ```python title="test_mongodb.py"
 from db_connection import get_db_connection, close_connection
@@ -141,40 +142,40 @@ if __name__ == "__main__":
     main()
 ```
 
-This script demonstrates basic CRUD operations:
+这个测试脚本演示了 MongoDB 的基本 CRUD 操作：
 
-1. Inserting a document
-2. Finding documents
-3. Updating a document
-4. Deleting a document
+1. 插入文档
+2. 查找文档
+3. 更新文档
+4. 删除文档
 
 </div>
 
-## Running the Test Script
+## 运行程序
 
-To run the test script, make sure your virtual environment is activated, then execute:
+确保已激活虚拟环境后，在终端中运行测试脚本：
 
 ```bash
 python test_mongodb.py
 ```
 
-If everything is set up correctly, you should see output indicating successful connection, document insertion, retrieval, update, and deletion.
+如果配置正确，您将看到连接成功的提示，以及文档的插入、查询、更新和删除操作的执行结果。
 
-## Best Practices
+## 开发建议
 
-1. Always activate the virtual environment before running your Python scripts or installing packages.
-2. Use environment variables to store sensitive information like database credentials.
-3. Close database connections after use to free up resources.
-4. Use try-except blocks to handle potential errors gracefully.
-5. Use PyMongo's built-in methods for database operations to ensure proper handling of MongoDB-specific data types.
+1. 始终在运行 Python 脚本或安装包之前激活虚拟环境
+2. 使用环境变量管理数据库连接信息等敏感数据
+3. 及时关闭数据库连接以释放系统资源
+4. 使用 try-except 结构处理可能的异常情况
+5. 使用 PyMongo 提供的方法进行数据库操作，以确保正确处理 MongoDB 特有的数据类型
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查：
 
-1. Ensure you've activated the virtual environment with `source ./bin/activate`.
-2. Verify that your MongoDB database is running and accessible.
-3. Double-check your database credentials in the `.env` file.
-4. Check the MongoDB logs in the Database app for any error messages.
+1. 是否已使用 `source ./bin/activate` 激活虚拟环境
+2. MongoDB 数据库是否正常运行且可访问
+3. `.env` 文件中的连接信息是否正确
+4. 查看数据库应用中的 MongoDB 日志以获取详细错误信息
 
-For more detailed information on using MongoDB with Python, refer to the [official PyMongo documentation](https://pymongo.readthedocs.io/).
+更多关于 PyMongo 的使用说明，请参考 [PyMongo 官方文档](https://pymongo.readthedocs.io/)。

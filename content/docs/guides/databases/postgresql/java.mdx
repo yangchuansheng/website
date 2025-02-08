@@ -1,28 +1,29 @@
 ---
 title: Java
-description: Learn how to connect to PostgreSQL databases in Sailos Devbox using Java
+description: 在 Sealos Devbox 中使用 Java 连接 PostgreSQL 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a PostgreSQL database using Java within your Sailos Devbox project, including basic CRUD (Create, Read, Update, Delete) operations.
+本教程将指导您如何在 Sealos Devbox 开发环境中使用 Java 语言连接 PostgreSQL 数据库，并实现基本的增删改查 (CRUD) 操作。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Java environment
-- [A PostgreSQL database created using the Database app in Sailos](./)
+在开始之前，请确保：
+- [已创建并配置好 Java 环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已在 Sealos 数据库应用中创建好 PostgreSQL 数据库实例](./)
 
-## Setup
+## 环境配置
 
 <div className='steps [&_h4]:step'>
 
-#### Download PostgreSQL JDBC Driver
+#### 获取 PostgreSQL JDBC 驱动
 
-To connect to the PostgreSQL server from a Java program, you need a PostgreSQL JDBC driver.
+首先，您需要下载 PostgreSQL JDBC 驱动程序来实现 Java 应用与 PostgreSQL 数据库的连接。
 
-You can download the latest version of the driver on the [jdbc.postgresql.org download page](https://jdbc.postgresql.org/download/). The downloaded file is a jar file e.g., postgresql-42.7.1.jar.
+请访问 [jdbc.postgresql.org 官方下载页面](https://jdbc.postgresql.org/download/)获取最新版本的驱动程序 (JAR 包)，如：postgresql-42.7.1.jar。
 
-#### Create a database configuration file
+#### 配置数据库连接参数
 
-Create a file named `db.properties` in your project directory with the following content:
+在项目根目录下创建 `db.properties` 文件，用于存储数据库连接信息：
 
 ```ini title="db.properties"
 db.url=jdbc:postgresql://your_database_host:5432/your_database_name
@@ -30,11 +31,11 @@ db.username=your_username
 db.password=your_password
 ```
 
-Replace the placeholders with your actual PostgreSQL credentials from the Database app in Sailos.
+请将上述占位符替换为您在 Sealos 数据库应用中获取的实际 PostgreSQL 连接参数。
 
-#### Create a DatabaseConfig class
+#### 创建数据库配置类
 
-Create a new file named `DatabaseConfig.java` with the following content:
+新建 `DatabaseConfig.java` 文件，用于管理数据库配置：
 
 ```java title="DatabaseConfig.java"
 import java.io.IOException;
@@ -70,17 +71,14 @@ public class DatabaseConfig {
 }
 ```
 
-The `DatabaseConfig` class is responsible for loading database configuration from the `db.properties` file. It has three static methods that expose the database configuration:
+`DatabaseConfig` 类主要负责：
+- 从 `db.properties` 文件加载数据库配置信息
+- 提供获取数据库连接参数的静态方法
+- 确保配置文件加载的安全性和可靠性
 
-- `getDbUrl()` – Returns the database URL.
-- `getDbUsername()` – Returns the username.
-- `getDbPassword()` – Returns the password.
+#### 定义数据模型
 
-This class ensures that sensitive database credentials are not hardcoded in the application.
-
-#### Create an Employee class
-
-Create a new file named `Employee.java` with the following content:
+创建 `Employee.java` 文件，定义员工信息的数据结构：
 
 ```java title="Employee.java"
 public class Employee {
@@ -113,11 +111,14 @@ public class Employee {
 }
 ```
 
-The `Employee` class represents the data model for an employee. It includes fields for id, name, and position, along with a constructor, getters, setters, and a `toString` method for easy printing of employee information.
+`Employee` 类包含：
+- 基本属性：id、name 和 position
+- 构造方法和访问器方法 (getter/setter)
+- 重写的 function `toString() { [native code] }` 方法，方便数据展示
 
-#### Create a DB class
+#### 实现数据库操作
 
-Create a new file named `DB.java` with the following content:
+创建 `DB.java` 文件，封装所有数据库操作：
 
 ```java title="DB.java"
 import java.sql.*;
@@ -193,16 +194,15 @@ public class DB {
 }
 ```
 
-The `DB` class is responsible for database operations:
+`DB` 类提供以下功能：
+- 数据库连接管理
+- 数据表的创建和维护
+- 完整的 CRUD 操作实现
+- 异常处理和资源管理
 
-- The `getConnection()` method connects to the PostgreSQL database using the connection parameters from `DatabaseConfig`.
-- It returns a `Connection` object if successful, or throws a `SQLException` if there's an error.
-- Other methods (`createTable`, `insertEmployee`, etc.) use this connection to perform CRUD operations.
-- Each method opens a new connection, performs its operation, and then closes the connection using try-with-resources, ensuring proper resource management.
+#### 编写主程序
 
-#### Create the main Java program
-
-Create a new file named `Main.java` with the following content:
+最后，创建 `Main.java` 文件，演示如何使用上述组件：
 
 ```java title="Main.java"
 import java.sql.SQLException;
@@ -251,41 +251,42 @@ public class Main {
 }
 ```
 
-The `Main` class demonstrates the usage of the `DB` class to perform various database operations:
-
-- It creates a table, inserts sample data, retrieves and displays employees, updates an employee, deletes an employee, and displays the updated list.
-- Each operation is wrapped in a try-catch block to handle potential `SQLException`s.
-- The program uses the methods from the `DB` class, which manage their own connections, ensuring that connections are properly opened and closed for each operation.
+主程序展示了：
+- 数据库连接的建立
+- 数据表的创建
+- 数据的插入和查询
+- 记录的更新和删除
+- 完整的异常处理流程
 
 </div>
 
-## Compile and Run
+## 编译和运行
 
-To compile and run the example, use the following commands in your terminal:
+在终端中执行以下命令来编译和运行示例程序：
 
 ```bash
 javac -cp .:postgresql-42.6.0.jar *.java
 java -cp .:postgresql-42.6.0.jar Main
 ```
 
-If everything is set up correctly, you should see output demonstrating the CRUD operations on the employees table.
+如果配置正确，您将看到程序执行各项数据库操作的输出结果。
 
-## Best Practices
+## 最佳实践
 
-1. Use a properties file to store database connection details.
-2. Implement a configuration class to load and provide access to database properties.
-3. Create a separate class for database connection management and operations.
-4. Use try-with-resources to ensure proper closure of database connections.
-5. Use prepared statements to prevent SQL injection.
-6. Handle exceptions appropriately and provide meaningful error messages.
+1. 使用配置文件管理数据库连接信息，避免硬编码
+2. 创建专门的配置类处理数据库属性
+3. 采用面向对象方式组织数据库操作
+4. 使用 try-with-resources 语句自动关闭数据库连接
+5. 实现预处理语句预防 SQL 注入攻击
+6. 完善的异常处理机制和错误提示
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请按以下步骤排查：
 
-1. Verify your database credentials in the `db.properties` file.
-2. Ensure your PostgreSQL database is running and accessible from your Devbox environment.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the PostgreSQL JDBC driver JAR file is in the same directory as your Java files.
+1. 核实 `db.properties` 文件中的数据库连接参数是否正确
+2. 确认 PostgreSQL 数据库服务是否正常运行且可访问
+3. 检查 Devbox 环境的网络连接状态
+4. 验证 PostgreSQL JDBC 驱动是否正确放置在项目目录中
 
-For more detailed information on using PostgreSQL with Java, refer to the [official PostgreSQL JDBC driver documentation](https://jdbc.postgresql.org/documentation/head/index.html).
+更多关于 Java 操作 PostgreSQL 的详细信息，请参考 [PostgreSQL JDBC 驱动官方文档](https://jdbc.postgresql.org/documentation/head/index.html)。

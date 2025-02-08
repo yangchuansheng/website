@@ -1,33 +1,35 @@
 ---
 title: Go
-description: Learn how to connect to Milvus databases in Sailos Devbox using Go
+description: 在 Sealos Devbox 中使用 Go 连接并操作 Milvus 集群的完整指南
 ---
 
-This guide will walk you through the process of connecting to a Milvus database using Go within your Sailos Devbox project.
+本指南将详细介绍如何在 Sealos Devbox 项目中使用 Go 语言连接和操作 Milvus 集群。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Go environment
-- [A Milvus database created using the Database app in Sailos](./)
+- [已创建并正确配置 Go 开发环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用成功部署 Milvus 集群](./)
 
-## Install Required Packages
+## 安装依赖包
 
-In your Cursor terminal, install the necessary packages:
+## 安装依赖包
+
+在 Cursor 终端中执行以下命令安装所需的依赖包：
 
 ```bash
 go get github.com/milvus-io/milvus-sdk-go/v2
 go get github.com/joho/godotenv
 ```
 
-These commands install the Milvus Go SDK and the godotenv package for loading environment variables.
+这将安装 Milvus Go SDK 和用于加载环境变量的 godotenv 包。
 
-## Connection Setup
+## 连接设置
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 配置环境变量
 
-Create a `.env` file in your project root with the following content:
+在项目根目录创建 `.env` 文件，添加以下配置信息：
 
 ```ini title=".env"
 MILVUS_ADDR=your_milvus_host:19530
@@ -37,11 +39,11 @@ ID_COLUMN=id
 EMBEDDING_COLUMN=embedding
 ```
 
-Replace the placeholders with your actual Milvus credentials and desired configuration.
+请将上述配置项替换为您实际的 Milvus 连接信息和所需参数。
 
-#### Create the main.go file
+#### 编写示例代码
 
-Create a new file named `main.go` with the following content:
+创建 `main.go` 文件，实现以下功能：
 
 ```go title="main.go"
 package main
@@ -153,35 +155,47 @@ func main() {
 }
 ```
 
-This code demonstrates how to connect to Milvus, create a collection, list collections, show and create partitions, and clean up by dropping the collection.
+示例代码演示了 Milvus 的基本操作，包括：连接数据库、创建和查看集合、管理分区，以及资源清理等功能。
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the application, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令运行示例程序：
 
 ```bash
 go run main.go
 ```
 
-This will execute the `main` function, demonstrating the connection to Milvus and basic operations with collections and partitions.
+程序将执行上述示例代码中的各项操作，并在控制台输出相关信息。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables for Milvus connection details and configuration.
-2. Always handle potential errors using proper error checking.
-3. Use contexts with timeouts for operations to prevent hanging in case of network issues.
-4. Close the Milvus client connection after operations are complete.
-5. Clean up resources (like dropping test collections) after you're done with them.
+1. 将 Milvus 的连接信息和配置保存在运行环境变量中。
+2. 务必做好错误处理和检查机制。
+3. 为操作设置超时上下文，避免网络问题导致程序卡死。
+4. 操作结束后要及时关闭 Milvus 客户端连接。
+5. 及时清理不再使用的资源 (比如删除测试用的集合)。
 
-## Troubleshooting
+3. 性能优化
+   - 设置合适的操作超时时间
+   - 及时释放不再使用的资源
+   - 在完成操作后关闭客户端连接
 
-If you encounter connection issues:
+## 常见问题排查
 
-1. Verify your Milvus credentials in the `.env` file.
-2. Ensure your Milvus database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the required packages are correctly installed.
+如果遇到连接或操作问题，请检查：
 
-For more detailed information on using Milvus with Go, refer to the [Milvus Go SDK documentation](https://github.com/milvus-io/milvus-sdk-go).
+1. 环境配置
+   - `.env` 文件中的连接参数是否正确
+   - Milvus 服务是否正常运行且可访问
+
+2. 开发环境
+   - 确认所需依赖包已正确安装
+   - 检查 Devbox 环境的网络访问权限
+
+3. 代码问题
+   - 验证 API 调用参数是否正确
+   - 检查错误处理逻辑是否完善
+
+更多详细信息，请参阅 [Milvus Go SDK 官方文档](https://github.com/milvus-io/milvus-sdk-go)。

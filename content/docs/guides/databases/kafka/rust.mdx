@@ -1,38 +1,41 @@
 ---
 title: Rust
-description: Learn how to connect to Kafka in Sailos Devbox using Rust
+description: 在 Sealos Devbox 中使用 Rust 连接 Kafka 的完整指南
 ---
 
-This guide will walk you through the process of connecting to Kafka using Rust within your Sailos Devbox project.
+本文将详细介绍如何在 Sealos Devbox 项目中使用 Rust 语言连接和操作 Kafka 消息队列服务。
 
-## Prerequisites
+## 前置条件
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with Rust environment
-- [A Kafka cluster created using the Database app in Sailos](./)
+在开始之前，请确保：
 
-## Install Required Dependencies
+- [已创建并正确配置 Rust 开发环境的 Sealos Devbox 项目](/docs/guides/fundamentals/create-a-project)
+- [已通过 Sealos 数据库应用成功部署 Kafka 集群](./)
 
-In your Cursor terminal, add the necessary dependencies to your `Cargo.toml` file:
+## 配置开发环境
 
-```toml
+在 Cursor 终端中，首先需要在 `Cargo.toml` 文件中添加以下依赖项：
+
+```toml title="Cargo.toml"
 [dependencies]
 rdkafka = "0.28"
 tokio = { version = "1.28", features = ["full"] }
 dotenv = "0.15"
 ```
 
-These dependencies include:
-- `rdkafka`: A high-level Apache Kafka client library for Rust
-- `tokio`: An asynchronous runtime for Rust
-- `dotenv`: A library for loading environment variables from a file
+这些依赖包的作用如下：
 
-## Connection Setup
+- `rdkafka`：Rust 语言的高性能 Apache Kafka 客户端库
+- `tokio`：Rust 的异步运行时框架，提供高效的并发处理能力
+- `dotenv`：用于从配置文件加载环境变量的工具库
+
+## 实现连接配置
 
 <div className='steps [&_h4]:step'>
 
-#### Set up the environment variables
+#### 设置环境变量
 
-First, let's set up the environment variables for our Kafka connection. Create a `.env` file in your project root with the following content:
+首先，在项目根目录下创建 `.env` 文件，添加 Kafka 连接所需的配置信息：
 
 ```ini title=".env"
 KAFKA_BROKERS=your_kafka_bootstrap_servers:9092
@@ -40,13 +43,13 @@ KAFKA_TOPIC=your_topic_name
 KAFKA_GROUP_ID=rust-consumer-group
 ```
 
-Replace the placeholders with your actual Kafka credentials from the Database app in Sailos.
+请使用你在 Sealos 数据库应用中获取的实际 Kafka 连接信息替换上述配置项。
 
-#### Create the main.rs file
+#### 编写主程序代码
 
-Create a new file named `src/main.rs` with the following content:
+创建 `src/main.rs` 文件，实现 Kafka 消息的生产和消费功能：
 
-```rust
+```rust title="src/main.rs"
 use rdkafka::config::ClientConfig;
 use rdkafka::producer::{FutureProducer, FutureRecord};
 use rdkafka::consumer::{StreamConsumer, Consumer};
@@ -122,37 +125,37 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-This script demonstrates how to:
+上述代码实现了以下功能：
 
-1. Set up a Kafka producer and send a message to a topic.
-2. Set up a Kafka consumer and read messages from a topic.
+1. 配置并创建 Kafka 生产者，向指定主题发送消息
+2. 配置并创建 Kafka 消费者，从指定主题读取消息
 
 </div>
 
-## Usage
+## 运行和测试
 
-To run the application, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令运行程序：
 
 ```bash
 cargo run
 ```
 
-This will compile and execute the `main` function, demonstrating the connection to Kafka, message production, and consumption.
+该命令会编译并执行 `main` 函数，展示完整的 Kafka 消息生产和消费流程。
 
-## Best Practices
+## 开发建议
 
-1. Use environment variables for Kafka configuration details.
-2. Implement proper error handling using Rust's `Result` type.
-3. Use asynchronous programming with Tokio for better performance.
-4. Consider implementing more robust consumer logic for production use, including proper error handling and graceful shutdown.
+1. 妥善管理配置信息：将 Kafka 连接参数等配置信息统一存储在环境变量中
+2. 完善错误处理：充分利用 Rust 的 `Result` 类型进行异常处理
+3. 使用异步编程：合理使用 Tokio 提供的异步特性来提升性能
+4. 生产环境优化：在实际生产环境中，应实现更完善的消费者逻辑，包括错误处理和优雅退出机制
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请按以下步骤排查：
 
-1. Verify your Kafka broker addresses in the `.env` file.
-2. Ensure your Kafka cluster is running and accessible from your Devbox environment.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that all required dependencies are correctly specified in your `Cargo.toml` file.
+1. 验证 `.env` 文件中的 Kafka broker 地址是否正确
+2. 确认 Kafka 集群状态是否正常，并且可以从 Devbox 环境访问
+3. 检查 Devbox 环境的网络连接和限制
+4. 确保 `Cargo.toml` 中的依赖配置准确无误
 
-For more detailed information on using Kafka with Rust, refer to the [rdkafka documentation](https://docs.rs/rdkafka).
+更多关于 Rust 操作 Kafka 的详细信息，请参考 [rdkafka 官方文档](https://docs.rs/rdkafka)。

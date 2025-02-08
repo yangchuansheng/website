@@ -1,38 +1,42 @@
 ---
 title: PHP
-description: Learn how to connect to MongoDB databases in Sailos Devbox using PHP
+description: 在 Sealos Devbox 中使用 PHP 连接 MongoDB 数据库的完整指南
 ---
 
-This guide will walk you through the process of connecting to a MongoDB database using PHP within your Sailos Devbox project.
+本文将指导您如何在 Sealos Devbox 项目中使用 PHP 连接和操作 MongoDB 数据库。
 
-## Prerequisites
+## 准备工作
 
-- [A Sailos Devbox project](/docs/guides/fundamentals/create-a-project) with PHP environment
-- [A MongoDB database created using the Database app in Sailos](./)
+在开始之前，请确保您已经：
 
-## Install Required Extensions
+- [在 Sealos Devbox 中创建了配置 PHP 环境的新项目](/docs/guides/fundamentals/create-a-project)
+- [通过 Sealos 数据库应用创建了 MongoDB 数据库实例](./)
 
-In your Cursor terminal, ensure that the MongoDB extension for PHP is installed:
+## 环境配置
+
+### 安装 MongoDB 扩展
+
+首先在 Cursor 终端中安装 PHP 的 MongoDB 扩展：
 
 ```bash
 sudo pecl install mongodb
 ```
 
-## Install the MongoDB PHP Library
+### 安装依赖包
 
-To install the MongoDB PHP Library, run the following command in your php-quickstart directory:
+在项目目录下运行以下命令安装 MongoDB PHP 驱动：
 
 ```bash
 composer require mongodb/mongodb
 ```
 
-## Connection Setup
+## 实现数据库连接
 
 <div className='steps [&_h4]:step'>
 
-#### Create a Configuration File
+#### 配置连接参数
 
-First, let's create a configuration file to store our database connection parameters. Create a file named `config.php` in your project directory with the following content:
+创建一个名为 `config.php` 的配置文件，用于存储数据库连接信息：
 
 ```php title="config.php"
 <?php
@@ -45,11 +49,11 @@ return [
 ];
 ```
 
-Replace the placeholders with your actual MongoDB credentials from the Database app in Sailos.
+请将上述配置项替换为您从 Sealos 桌面数据库应用中获取的实际 MongoDB 连接信息。
 
-#### Create a Database Connection Function
+#### 编写连接函数
 
-Next, let's create a PHP file that will handle the database connection. Create a file named `db_connect.php` with the following content:
+创建 `db_connect.php` 文件，实现数据库连接功能：
 
 ```php title="db_connect.php"
 <?php
@@ -70,11 +74,11 @@ function getMongoDBConnection() {
 }
 ```
 
-This function reads the configuration from `config.php` and establishes a connection to the MongoDB database.
+该函数会读取配置文件并建立与 MongoDB 数据库的连接。
 
-#### Create a Test Script
+#### 编写测试脚本
 
-Now, let's create a test script to verify our connection and perform some basic database operations. Create a file named `test_mongodb.php` with the following content:
+创建 `test_mongodb.php` 文件，用于测试数据库连接和基本操作：
 
 ```php title="test_mongodb.php"
 <?php
@@ -111,31 +115,31 @@ echo "Deleted " . $deleteResult->getDeletedCount() . " document(s)\n";
 
 </div>
 
-## Usage
+## 运行程序
 
-To run the test script, use the following command in your Cursor terminal:
+在 Cursor 终端中执行以下命令来运行测试脚本：
 
 ```bash
 php test_mongodb.php
 ```
 
-This will execute the script, demonstrating the connection to the database, document insertion, querying, updating, and deletion.
+该脚本将演示数据库的连接、文档的增删改查等基本操作。
 
-## Best Practices
+## 最佳实践
 
-1. Use environment variables or a separate configuration file for database credentials.
-2. Always handle potential errors using try-catch blocks.
-3. Use the MongoDB PHP library for better performance and features.
-4. Close the database connection after operations are complete (in this case, it's handled automatically).
-5. Use appropriate indexing for frequently queried fields to improve performance.
+1. 建议使用环境变量或独立的配置文件来管理数据库凭据
+2. 在代码中使用 try-catch 块来妥善处理异常情况
+3. 推荐使用官方的 MongoDB PHP 驱动以获得更好的性能和功能支持
+4. 注意及时关闭数据库连接 (本示例中会自动处理)
+5. 对经常查询的字段建立合适的索引以提升查询性能
 
-## Troubleshooting
+## 常见问题排查
 
-If you encounter connection issues:
+如果遇到连接问题，请检查以下几点：
 
-1. Verify your database credentials in the `config.php` file.
-2. Ensure your MongoDB database is running and accessible.
-3. Check for any network restrictions in your Devbox environment.
-4. Confirm that the MongoDB PHP extension is correctly installed.
+1. 确认 `config.php` 中的数据库连接信息是否正确
+2. 验证 MongoDB 数据库服务是否正常运行且可访问
+3. 检查网络配置是否存在访问限制
+4. 确保 MongoDB PHP 扩展已正确安装
 
-For more detailed information on using MongoDB with PHP, refer to the [official MongoDB PHP library documentation](https://docs.mongodb.com/drivers/php/).
+更多关于 PHP 操作 MongoDB 的详细信息，请参考 [MongoDB PHP 驱动官方文档](https://docs.mongodb.com/drivers/php/)。

@@ -1,3 +1,4 @@
 {
-    "pages": ["fundamentals", "databases", "deployments"]
+    "title": "指南",
+    "pages": ["fundamentals", "databases", "app-store", "app-launchpad", "cronjob", "object-storage"]
 }

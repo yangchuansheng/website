@@ -1,47 +1,49 @@
 ---
 title: Kafka
-description: Deploy and connect to Kafka clusters in Sailos DevBox
+description: 在 Sealos Devbox 中部署和连接 Kafka 集群
 ---
 
-Apache Kafka is a distributed event streaming platform that allows you to build real-time data pipelines and streaming applications. In Sailos DevBox, you can easily set up and connect to Kafka clusters for your development projects.
+Apache Kafka 是一个分布式事件流平台，可让您构建实时数据管道和流应用程序。在 Sealos Devbox 中，您可以轻松地为您的开发项目设置和连接 Kafka 数据库。
 
-## Deploy Kafka in Sailos
+## 在 Sealos 中部署 Kafka
 
-Sailos makes it easy to deploy a Kafka cluster with just a few clicks. Follow these steps:
+Sealos 提供了简单直观的操作界面，只需几步即可完成 Kafka 集群的部署。具体步骤如下：
 
 <div className='steps [&_h5]:step'>
 
-<h5>From the Sailos desktop, click on the "Database" icon to open the Database app.</h5>
+<h5>打开 [Sealos 控制台](https://cloud.sealos.run)，找到并点击"数据库"应用图标。</h5>
 
-![Kafka](./images/kafka-1.jpeg)
+![数据库服务入口](./images/sealos-postgresql-database-entry.jpg)
 
-<h5>Click on the "Create New Database" button. In the deployment form:</h5>
-   - Select "Kafka" as the database type.
-   - Choose the desired Kafka version (e.g., kafka-3.3.2).
-   - Enter a name for your Kafka cluster (use lowercase letters and numbers only).
-   - Adjust the CPU and Memory sliders to set the resources for your Kafka brokers.
-   - Set the number of brokers (1 for single-node development and testing, 3 or more for production).
-   - Specify the storage size for each broker (e.g., 3 Gi).
+<h5>在数据库应用界面中，点击"新建"按钮，然后在部署表单中填写以下信息：</h5>
 
-![Kafka](./images/kafka-2.png)
+   - 数据库类型：选择 ”Kafka”
+   - 版本：选择所需的 Kafka 版本 (如 kafka-3.3.2)
+   - 集群名称：输入名称 (仅使用小写字母和数字)
+   - 计算资源：通过滑块调整 CPU 和内存配置
+   - 副本数量：开发测试环境建议设置为 1
+   - 存储容量：设置所需的存储空间 (如：3 Gi)
 
-<h5>Review the projected cost on the left sidebar. Click the "Deploy" button in the top right corner to create your Kafka cluster.</h5>
+
+![Kafka 集群配置界面](./images/sealos-kafka-deployment-config.png)
+
+<h5>确认配置无误后，您可以在左侧边栏查看预估成本，然后点击右上角的"部署"按钮开始创建数据库。</h5>
 
 </div>
 
-Once deployed, Sailos will provide you with the necessary connection details.
+部署完成后，系统将提供 Kafka 集群的连接参数，您可以使用这些信息连接到 Kafka 集群。
 
-![Kafka](./images/kafka-3.png)
+![Kafka 集群连接信息](./images/sealos-kafka-connection-info.png)
 
-## Connect to Kafka in DevBox
+## 在 Sealos Devbox 中连接 Kafka
 
-Here are examples of how to connect to your Kafka cluster using different programming languages and frameworks within your DevBox environment:
+我们为不同的编程语言提供了连接 Kafka 集群的示例代码，请选择您需要的开发语言：
 
 <Cards>
-  <Card title="Connect to Kafka with Go in Sailos Devbox" href="./kafka/go" />
-  <Card title="Connect to Kafka with Java in Sailos Devbox" href="./kafka/java" />
-  <Card title="Connect to Kafka with Node.js in Sailos Devbox" href="./kafka/nodejs" />
-  <Card title="Connect to Kafka with PHP in Sailos Devbox" href="./kafka/php" />
-  <Card title="Connect to Kafka with Python in Sailos Devbox" href="./kafka/python" />
-  <Card title="Connect to Kafka with Rust in Sailos Devbox" href="./kafka/rust" />
+  <Card title="使用 Go 连接 Kafka" href="./kafka/go" />
+  <Card title="使用 Java 连接 Kafka" href="./kafka/java" />
+  <Card title="使用 Node.js 连接 Kafka" href="./kafka/nodejs" />
+  <Card title="使用 PHP 连接 Kafka" href="./kafka/php" />
+  <Card title="使用 Python 连接 Kafka" href="./kafka/python" />
+  <Card title="使用 Rust 连接 Kafka" href="./kafka/rust" />
 </Cards>
