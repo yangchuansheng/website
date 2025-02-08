@@ -1,0 +1,62 @@
+---
+title: 自定义域名证书
+keywords: [自定义域名证书, Sealos, 应用管理, cert-manager, Kubernetes, Ingress, TLS Secret, CNAME设置, 证书配置, 域名访问]
+description: 学习如何在Sealos平台上为自定义域名设置证书，包括创建TLS Secret、修改Ingress配置等步骤，确保安全访问您的应用。
+---
+
+Sealos 通过集成 [cert-manager](https://cert-manager.io/) 提供自动化的证书管理服务。当您通过【应用管理】界面配置自定义域名时，系统会自动为该域名签发并维护有效的 TLS 证书。如果您需要完全控制证书的生成和管理流程，可以通过以下方式使用自定义证书。
+
+<Callout type="warn">
+在使用自定义证书之前，请确保您已经配置好了[自定义域名](./add-a-domain)。
+</Callout>
+
+<div className='steps [&_h4]:step'>
+
+#### 创建 TLS Secret
+
+在 Sealos 中打开【终端】，依次输入以下命令创建 TLS Secret：
+
+```bash
+# 用证书文件信息创建 tls.crt（使用证书文件信息替换掉 xxxx）
+cat > tls.crt <<EOF
+-----BEGIN CERTIFICATE-----
+xxxx
+-----END CERTIFICATE-----
+EOF
+
+# 用证书私钥信息创建 tls.key（使用证书私钥信息替换掉 xxxx）
+cat > tls.key <<EOF
+-----BEGIN RSA PRIVATE KEY-----
+xxxx
+-----END RSA PRIVATE KEY-----
+EOF
+
+# 使用 tls.crt 和 tls.key 创建 secret
+kubectl create secret tls network-test --cert tls.crt --key tls.key
+
+# 查看应用对应的 ingress
+kubectl get ingress 
+```
+
+![Sealos 创建 TLS Secret 界面](./images/sealos-create-tls-secret.zh-cn.png)
+
+#### 修改 Ingress 配置
+
+接下来，您需要修改应用的 Ingress 配置，将证书信息指向您创建的 TLS Secret。
+
+```bash
+# 将命令中的 xzy-dev.sealos.run 替换为您自己的域名
+kubectl patch ingress network-twvuqmjzckur -p '{"spec":{"tls":[{"hosts":["xzy-dev.sealos.run"],"secretName":"network-test"}]}}'
+```
+
+![Sealos 修改 Ingress 配置界面](./images/sealos-patch-ingress.zh-cn.png)
+
+</div>
+
+最终您就可以通过自定义域名访问您的应用了。
+
+![Sealos 自定义域名访问界面](./images/sealos-custom-domain.zh-cn.png)
+
+
+
+

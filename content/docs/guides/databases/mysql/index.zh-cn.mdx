@@ -1,0 +1,48 @@
+---
+title: MySQL
+description: 在 Sealos Devbox 中部署和连接 MySQL 数据库
+---
+
+MySQL 是一款功能强大的开源对象关系型数据库系统。通过 Sealos Devbox，您可以快速部署并使用 MySQL 数据库来支持您的开发项目。
+
+## 在 Sealos 中部署 MySQL
+
+Sealos 提供了简单直观的操作界面，只需几步即可完成 MySQL 数据库的部署。具体步骤如下：
+
+<div className='steps [&_h5]:step'>
+
+<h5>打开 [Sealos 控制台](https://cloud.sealos.run)，找到并点击"数据库"应用图标。</h5>
+
+![Sealos 数据库应用界面展示数据库服务入口](./images/sealos-postgresql-database-entry.zh-cn.jpg)
+
+<h5>在数据库应用界面中，点击"新建"按钮，然后在部署表单中填写以下信息：</h5>
+
+   - 数据库类型：选择 ”MySQL”
+   - 版本：选择所需的 MySQL 版本 (如 ac-mysql-8.0.31)
+   - 数据库名称：输入名称 (仅支持小写字母和数字的组合)
+   - 资源配置：通过滑块调整 CPU 和内存分配
+   - 副本数量：开发测试环境建议设置为 1
+   - 存储容量：设置所需的存储空间 (如：3 Gi)
+
+![MySQL 数据库部署配置界面，包含版本选择、资源配置等选项](./images/sealos-mysql-deployment-config.zh-cn.png)
+
+<h5>确认配置无误后，您可以在左侧边栏查看预估成本，然后点击右上角的"部署"按钮开始创建数据库。</h5>
+
+</div>
+
+部署完成后，系统会自动为您生成并显示数据库的连接信息。
+
+![MySQL 数据库连接信息界面，显示数据库访问凭证和连接参数](./images/sealos-mysql-connection-info.zh-cn.png)
+
+## 在 Sealos Devbox 中连接 MySQL
+
+我们为不同的编程语言和框架提供了详细的 MySQL 数据库连接指南，请点击下方相应的卡片查看：
+
+<Cards>
+<Card title="使用 Go 连接 MySQL" href="./mysql/go" />
+<Card title="使用 Java 连接 MySQL" href="./mysql/java" />
+<Card title="使用 Node.js 连接 MySQL" href="./mysql/nodejs" />
+<Card title="使用 PHP 连接 MySQL" href="./mysql/php" />
+<Card title="使用 Python 连接 MySQL" href="./mysql/python" />
+<Card title="使用 Rust 连接 MySQL" href="./mysql/rust" />
+</Cards>
